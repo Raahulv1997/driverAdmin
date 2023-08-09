@@ -1,254 +1,25 @@
 import axios from "axios";
+import moment from "moment";
 // import React from "react";
-let user_token = localStorage.getItem("user_token");
+
 let admin_token = localStorage.getItem("admin_token");
-let vendor_token = localStorage.getItem("vendor_token");
-console.log("admin_token--" + admin_token);
-console.log("vendor_token--" + vendor_token);
 
-export const updateCart = async (product_id, qty) => {
-  console.log("in update cart fucntion==" + product_id);
-  console.log("qty==" + qty);
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/cart_update`,
-    {
-      product_id: product_id,
-      cart_product_quantity: qty,
-    },
-    {
-      headers: {
-        user_token: user_token,
-      },
-    }
-  );
-  console.log("in update cart fucntion==" + JSON.stringify(response));
+let driver_token = localStorage.getItem("driver_token");
 
-  return response.data;
-};
-
-export const fetchcartdata = async () => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/cart_list`,
-
-    { headers: { user_token: `${user_token}` } }
-  );
-  return response.data;
-};
-
-export const deleteCart = async (id, user_id) => {
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/cart_delete`,
-    {
-      user_id: user_id,
-      id: id,
-    },
-    {
-      headers: { user_token },
-    }
-  );
-  return response.data;
-};
-
-export const userdetails = async () => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/user_details`,
-
-    {
-      headers: { user_token },
-    }
-  );
-  return response.data;
-};
-// const brandArrrry = [];
-export const allproduct = async (
-  searchbox,
-  price_from,
-  price_to,
-  showratingdata,
-  brand,
-  category,
-  currentPage,
-  recordsPerPage
-) => {
+export const allOrder = async (id) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/search?page=${currentPage}&per_page=${recordsPerPage}`,
+    `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
     {
-      price_from: price_from,
-      price_to: price_to,
-      search: searchbox,
-      category: category,
-      rating: showratingdata,
-      brand: brand,
-      seo_tag: [],
-      vendor_id: [],
-      name: [],
+      order_id: id,
+      date_from: "",
+      date_to: "",
     },
-
-    user_token !== null && user_token !== undefined
-      ? { headers: { user_token: user_token } }
-      : { headers: { user_blank: true } }
-  );
-  return response.data;
-};
-
-export const fetchfilter = async () => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/filter_list`
-  );
-  return response.data;
-};
-
-export const AllproductData = async (
-  id,
-  search,
-  category,
-  price_from,
-  price_to,
-  rating,
-  brand,
-  seo_tag,
-  vendor_id
-) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/search?page=0&per_page=400`,
-    {
-      price_from: price_from,
-      price_to: price_to,
-      search: search,
-      category: category,
-      rating: [rating],
-      brand: brand,
-      seo_tag: [seo_tag],
-      vendor_id: [vendor_id],
-      name: [],
-      id: [id],
-      is_deleted: [0],
-    },
-    head
-  );
-  return response.data;
-};
-
-export const AddProductData = async (props) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/addproduct`,
-    props,
-    head
-  );
-  return response.data;
-};
-
-export const UpdateProductData = async (props) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/update_product`,
-    props,
-
-    head
-  );
-  return response.data;
-};
-
-export const allOrder = async (searchdata) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  if (searchdata == undefined) {
-    searchdata = "";
-  }
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/order_search?page=0&per_page=400`,
-    {
-      search: "",
-      order_id: searchdata,
-      vendor_id: "",
-      category: "",
-      brand: "",
-      user_id: "",
-    },
-
-    head
+    { headers: { admin_token: `${admin_token}` } }
   );
   return response.data;
 };
 
 export const OrderStatusChange = async (stautsValue, orderID, userId) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
   const response = await axios.put(
     `${process.env.REACT_APP_BASEURL_0}/order_status_update`,
     {
@@ -256,516 +27,63 @@ export const OrderStatusChange = async (stautsValue, orderID, userId) => {
       status_order: stautsValue,
       user_id: userId,
     },
-
-    head
-  );
-  return response.data;
-};
-
-export const fetchUserData = async (searchData, id) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/user_search`,
-    {
-      search: searchData,
-      id: id,
-    },
-    head
-  );
-  return response.data;
-};
-
-export const UpdateProductStatus = async (statusValue, id) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/update_product`,
-    {
-      id: id,
-      status: statusValue,
-    },
-
-    head
-  );
-  return response.data;
-};
-
-export const DeleteProductStatus = async (id) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/update_product`,
-    {
-      id: id,
-      is_deleted: [1],
-    },
-    head
-  );
-  return response.data;
-};
-
-export const GetProductImages = async (id) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/product_image`,
-    {
-      product_id: id,
-      product_image_id: "",
-    }
-  );
-  return response.data;
-};
-
-export const AddProductImage = async (imgobj) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/add_product_image`,
-    imgobj,
-    head
-  );
-  return response.data;
-};
-
-export const DeleteProductImage = async (
-  id,
-  product_img_id,
-  product_image_name
-) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/product_image_delete`,
-    {
-      product_image_id: product_img_id,
-      product_id: id,
-      product_image_name: product_image_name,
-    },
-    head
-  );
-  return response.data;
-};
-
-export const ProductCoverImageChange = async (id, product_img_id) => {
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/add_remove_cover_image`,
-    {
-      product_image_id: product_img_id,
-      product_id: id,
-      image_position: "cover",
-    },
-    head
-  );
-  return response.data;
-};
-
-export const sigup_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/user_signup`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const otp_verify_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/user_otp_verify`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const login_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/user_login`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const forget_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/user_forgate_password`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const change_password_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/change_user_password`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const user_home_api = async (req_body_obj) => {
-  let token = localStorage.getItem("user_token");
-  let token_obj;
-
-  if (token !== "" && token !== null && token !== undefined) {
-    token_obj = { headers: { user_token: `${token}` } };
-  } else {
-    token_obj = { headers: { user_blank: "true" } };
-  }
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/search?page=0&per_page=1000`,
-    req_body_obj,
-    token_obj
+    { headers: { admin_token: `${admin_token}` } }
   );
   return response.data;
 };
 
 export const AdminLoginData = async (email, password) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/admin_login`,
-    { email: email, password: password }
-  );
-  return response.data;
-};
-export const add_to_cart_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/add_to_cart`,
-    req_body_obj[0],
-    req_body_obj[1]
-  );
-  return response.data;
-};
-export const update_to_cart_api = async (req_body_obj) => {
-  let response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/cart_update`,
-    req_body_obj[0],
-    req_body_obj[1]
-  );
-  return response.data;
-};
-export const cart_delete_api = async (productID, qty) => {
-  let response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/cart_delete`,
+    `${process.env.REACT_APP_BASEURL_0}/delivery_admin_login`,
     {
-      product_id: productID,
-      cart_product_quantity: qty,
-    },
-    {
-      headers: { user_token: user_token },
-    }
-  );
-  return response.data;
-};
-export const user_cart_api = async (req_body_obj) => {
-  let response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/cart_list`,
-    req_body_obj
-  );
-  return response.data;
-};
-
-export const call_product_detaile_api = async (req_body_obj) => {
-  let response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/search?page=0&per_page=400`,
-    {
-      price_from: "",
-      price_to: "",
-      search: "",
-      id: [req_body_obj[0]],
-      is_deleted: [0],
-    },
-    req_body_obj[1]
-  );
-  return response.data;
-};
-
-export const UserSideDeleteProduct = async (id) => {
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/update_product`,
-    {
-      id: id,
-      is_deleted: [1],
-    },
-
-    {
-      headers: { user_token: user_token },
+      admin_email: email,
+      admin_password: password,
     }
   );
   return response.data;
 };
 
-export const AddUserOrder = async (props) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/add_order`,
-    props,
-    {
-      headers: { user_token: user_token },
-    }
-  );
-  return response.data;
-};
-
-export const userOrder = async (orderID) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/order_search?page=0&per_page=400`,
-    {
-      search: "",
-      order_id: orderID,
-      vendor_id: "",
-      category: "",
-      brand: "",
-      user_id: "",
-    },
-
-    {
-      headers: { user_token: user_token },
-    }
-  );
-  return response.data;
-};
-
-export const OrderByNo = async (orderID) => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/order_details?id=${orderID}`,
-
-    {
-      headers: { user_token: user_token },
-    }
-  );
-  return response.data;
-};
-
-export const UserUpdatefunction = async (props, file, filename) => {
+export const AddDriverByAdmin = async (
+  props,
+  imagefile,
+  imagefilename,
+  adharfile,
+  adharfilename,
+  licencefile,
+  licencefilename
+) => {
   const formData = new FormData();
-  formData.append("first_name", props.first_name);
-  formData.append("last_name", props.last_name);
+  formData.append("driver_name", props.driver_name);
+  formData.append("driver_last_name", props.driver_last_name);
+  formData.append("date_of_birth", props.date_of_birth);
+  formData.append("current_address", props.current_address);
+  formData.append("gender", props.gender);
+  formData.append("age", props.age);
   formData.append("email", props.email);
   formData.append("password", props.password);
-  formData.append("phone_no", props.phone_no);
-  formData.append("pincode", props.pincode);
-  formData.append("image", file);
-  formData.append("filename", filename);
-  formData.append("city", props.city);
-  formData.append("address", props.address);
-  formData.append("alternate_address", props.alternate_address);
+  formData.append("image", imagefile);
+  formData.append("imagefilename", imagefilename);
+  formData.append("aadhar_card", adharfile);
+  formData.append("aadharfilename", adharfilename);
+  formData.append("licence", licencefile);
+  formData.append("licencefilename", licencefilename);
+  formData.append("contect_no", props.contect_no);
+  formData.append("aadhar_no", props.aadhar_no);
+  formData.append("licence_no", props.licence_no);
+  formData.append("licence_issue_date", props.licence_issue_date);
+  formData.append("licence_validity_date", props.licence_validity_date);
 
-  const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/update_user`,
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/driver_add_by_admin`,
     formData,
-    {
-      headers: { user_token: user_token },
-    }
+    { headers: { admin_token: `${admin_token}` } }
   );
   return response.data;
 };
 
-export const AddVendorfunction = async (props, file, filename) => {
-  const formData = new FormData();
-
-  formData.append("owner_name", props.owner_name);
-  formData.append("shop_name", props.shop_name);
-  formData.append("email", props.email);
-  formData.append("mobile", props.mobile);
-  formData.append("shop_address", props.shop_address);
-  formData.append("gstn", props.gstn);
-  formData.append("image", file);
-  formData.append("filename", filename);
-  formData.append("geolocation", props.geolocation);
-  formData.append("availability", props.availability);
-
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
+export const DriverSignUpFuntion = async (email, password) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/admin_add_vendor`,
-    formData,
-    head
-  );
-  return response.data;
-};
-
-export const VendorListFunction = async (search, shopname) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_list`,
-    {
-      search: search,
-      shop_name: shopname,
-      is_active: "1",
-    }
-  );
-  return response.data;
-};
-
-export const VendorDetailsById = async (id) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_list`,
-    {
-      search: "",
-      shop_name: "",
-      vendor_id: id,
-    }
-  );
-  return response.data;
-};
-
-export const AdminVendorStatusChange = async (status, id) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/admin_change_vendor_status`,
-    {
-      vendor_id: id,
-      status: status,
-    }
-  );
-  return response.data;
-};
-
-export const UpdateVendorfunction = async (props, file, filename, id) => {
-  const formData = new FormData();
-  formData.append("vendor_id", id);
-  formData.append("owner_name", props.owner_name);
-  formData.append("shop_name", props.shop_name);
-  formData.append("email", props.email);
-  formData.append("mobile", props.mobile);
-  formData.append("shop_address", props.shop_address);
-  formData.append("gstn", props.gstn);
-  formData.append("image", file);
-  formData.append("filename", filename);
-  formData.append("geolocation", props.geolocation);
-  formData.append("availability", props.availability);
-
-  let head;
-  // let user_token = localStorage.getItem("user_token");
-  let admin_token = localStorage.getItem("admin_token");
-  let vendor_token = localStorage.getItem("vendor_token");
-
-  if (vendor_token != null && vendor_token != undefined && vendor_token != "") {
-    head = { headers: { vendor_token: `${vendor_token}` } };
-  } else if (
-    admin_token != null &&
-    admin_token != undefined &&
-    admin_token != ""
-  ) {
-    head = { headers: { admin_token: `${admin_token}` } };
-  } else {
-  }
-
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/update_vendor_profile`,
-    formData,
-    head
-  );
-  return response.data;
-};
-
-export const AdminVendorDelete = async (id) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/admin_change_vendor_status`,
-    {
-      vendor_id: id,
-      is_active: "0",
-    }
-  );
-  return response.data;
-};
-
-export const VendorSignUpFuntion = async (email, password) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_signup`,
+    `${process.env.REACT_APP_BASEURL_0}/sign_by_driver`,
     {
       email: email,
       password: password,
@@ -774,9 +92,9 @@ export const VendorSignUpFuntion = async (email, password) => {
   return response.data;
 };
 
-export const VendorOtpVerifyFuntion = async (email, otp) => {
+export const DriverOtpVerifyFuntion = async (email, otp) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_otp_verify`,
+    `${process.env.REACT_APP_BASEURL_0}/driver_otp_verify`,
     {
       email: email,
       otp: otp,
@@ -785,9 +103,9 @@ export const VendorOtpVerifyFuntion = async (email, otp) => {
   return response.data;
 };
 
-export const VendorLoginFuntion = async (email, password) => {
+export const DriverLoginFuntion = async (email, password) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_login`,
+    `${process.env.REACT_APP_BASEURL_0}/driver_login`,
     {
       email: email,
       password: password,
@@ -796,54 +114,9 @@ export const VendorLoginFuntion = async (email, password) => {
   return response.data;
 };
 
-export const VendorDetailsBytoken = async () => {
-  const response = await axios.get(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_details`,
-    {
-      headers: { vendor_token: vendor_token },
-    }
-  );
-  return response.data;
-};
-
-export const UpdateVendorByToken = async (props, file, filename) => {
-  const formData = new FormData();
-  // formData.append("vendor_id", id);
-  formData.append("owner_name", props.owner_name);
-  formData.append("shop_name", props.shop_name);
-  formData.append("email", props.email);
-  formData.append("mobile", props.mobile);
-  formData.append("shop_address", props.shop_address);
-  formData.append("gstn", props.gstn);
-  formData.append("image", file);
-  formData.append("filename", filename);
-  formData.append("geolocation", props.geolocation);
-  formData.append("availability", props.availability);
-
+export const getForgetOtpDriver = async (email) => {
   const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/update_vendor_profile`,
-    formData,
-    {
-      headers: { vendor_token: vendor_token },
-    }
-  );
-  return response.data;
-};
-
-export const Vendorotp = async (email, otp) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_otp_verify`,
-    {
-      email: email,
-      otp: otp,
-    }
-  );
-  return response.data;
-};
-
-export const getForgetOtpVendor = async (email) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_forgate_password`,
+    `${process.env.REACT_APP_BASEURL_0}/driver_forgate_password`,
     {
       email: email,
     }
@@ -851,17 +124,505 @@ export const getForgetOtpVendor = async (email) => {
   return response.data;
 };
 
-export const getForgetpasswordUpdate = async (password) => {
+export const ForgetpasswordDriverUpdate = async (password) => {
   const response = await axios.put(
-    `${process.env.REACT_APP_BASEURL_0}/vendor_forgate_password_update`,
+    `${process.env.REACT_APP_BASEURL_0}/driver_forgate_password_update`,
     {
       password: password,
     },
     {
       headers: {
-        vendor_token: vendor_token,
+        driver_token: driver_token,
       },
     }
+  );
+  return response.data;
+};
+
+export const getDriverDetails = async () => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BASEURL_0}/driver_details`,
+
+    {
+      headers: {
+        driver_token: driver_token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const UpdateDriverByToken = async (
+  props,
+  imagefile,
+  imagefilename,
+  adharfile,
+  adharfilename,
+  licencefile,
+  licencefilename
+) => {
+  const formData = new FormData();
+
+  formData.append("driver_name", props.driver_name);
+  formData.append("driver_last_name", props.driver_last_name);
+  formData.append("date_of_birth", props.date_of_birth);
+  formData.append("current_address", props.current_address);
+  formData.append("gender", props.gender);
+  formData.append("age", props.age);
+  formData.append("email", props.email);
+  formData.append("password", props.password);
+  formData.append("image", imagefile);
+  formData.append("imagefilename", imagefilename);
+  formData.append("aadhar_card", adharfile);
+  formData.append("aadharfilename", adharfilename);
+  formData.append("licence", licencefile);
+  formData.append("licencefilename", licencefilename);
+  formData.append("contect_no", props.contect_no);
+  formData.append("aadhar_no", props.aadhar_no);
+  formData.append("licence_no", props.licence_no);
+  formData.append("licence_issue_date", props.licence_issue_date);
+  formData.append("licence_validity_date", props.licence_validity_date);
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/update_driver`,
+    formData,
+    {
+      headers: {
+        driver_token: driver_token,
+      },
+    }
+  );
+  return response.data;
+};
+
+export const getDriverListById = async (id) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/only_driver_list`,
+    {
+      driver_id: id,
+    }
+  );
+  return response.data;
+};
+
+export const UpdateDriverByAdmin = async (
+  props,
+  imagefile,
+  imagefilename,
+  adharfile,
+  adharfilename,
+  licencefile,
+  licencefilename
+) => {
+  const formData = new FormData();
+  formData.append("driver_name", props.driver_name);
+  formData.append("driver_last_name", props.driver_last_name);
+  formData.append("date_of_birth", props.date_of_birth);
+  formData.append("current_address", props.current_address);
+  formData.append("gender", props.gender);
+  formData.append("age", props.age);
+  formData.append("email", props.email);
+  formData.append("password", props.password);
+  formData.append("image", imagefile);
+  formData.append("imagefilename", imagefilename);
+  formData.append("aadhar_card", adharfile);
+  formData.append("aadharfilename", adharfilename);
+  formData.append("licence", licencefile);
+  formData.append("licencefilename", licencefilename);
+  formData.append("contect_no", props.contect_no);
+  formData.append("aadhar_no", props.aadhar_no);
+  formData.append("licence_no", props.licence_no);
+  formData.append(
+    "licence_issue_date",
+    moment(props.licence_issue_date).format("YYYY-MM-DD")
+  );
+  formData.append(
+    "licence_validity_date",
+    moment(props.licence_validity_date).format("YYYY-MM-DD")
+  );
+  formData.append("driver_id", props.driver_id);
+
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/update_driver`,
+    formData,
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getDriverFilter = async (name) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/only_driver_list`,
+    {
+      search: name,
+    }
+  );
+  return response.data;
+};
+
+export const DriverUpdateStatus = async (id, statusValue) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/delete_restore_driver`,
+    {
+      driver_id: id,
+      is_active: "",
+      status: statusValue,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const DriverDeleteStatusChange = async (id) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/delete_restore_driver`,
+    {
+      driver_id: id,
+      is_active: "0",
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const AddVehicleByAdmin = async (
+  props,
+  pucCertificateFile,
+  pucCertificatefilename,
+  insuranceFile,
+  insurancefilename,
+  registrationFile,
+  registrationfilename
+) => {
+  console.log("data---" + JSON.stringify(props));
+  const formData = new FormData();
+  formData.append("company_name", props.company_name);
+  formData.append("model", props.model);
+  formData.append("color", props.color);
+  formData.append(
+    "registration_no_of_vehicle",
+    props.registration_no_of_vehicle
+  );
+  formData.append("chassis_number", props.chassis_number);
+
+  formData.append("vehicle_owner_name", props.vehicle_owner_name);
+  formData.append("puc_expiration_date", props.puc_expiration_date);
+  formData.append("insurance_expiration_date", props.insurance_expiration_date);
+  formData.append(
+    "registration_expiration_date",
+    props.registration_expiration_date
+  );
+  formData.append("puc_certificate", pucCertificateFile);
+  formData.append("pucCertificatefilename", pucCertificatefilename);
+  formData.append("insurance", insuranceFile);
+  formData.append("insurancefilename", insurancefilename);
+  formData.append("registration", registrationFile);
+  formData.append("registrationfilename", registrationfilename);
+
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/register_your_vehicle`,
+    formData,
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getDriverList = async () => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/only_driver_list`,
+    {
+      is_active: 1,
+    }
+  );
+  return response.data;
+};
+
+export const getAllDriverList = async () => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/driver_list`
+  );
+  return response.data;
+};
+
+export const chooseDriverforDelivery = async () => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/chouse_driver_for_delivery`,
+    {
+      order_id: "",
+      delivery_lat: "",
+      delivery_log: "",
+      nearest_of_delivery_pin: "",
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const orderAssignByAdmin = async (orderID, driverId) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/order_asign_by_delivery_admin`,
+    {
+      order_id: orderID,
+      driver_id: driverId,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getOrderWithDriver = async (fromDate, toDate, obj) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
+    {
+      date_from: fromDate,
+      date_to: toDate,
+    },
+    obj
+  );
+  return response.data;
+};
+
+export const VehicleList = async () => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
+    {
+      is_active: 1,
+    }
+  );
+  return response.data;
+};
+
+export const VehicleListById = async (id) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
+    {
+      vehicle_id: id,
+    }
+  );
+  return response.data;
+};
+
+export const VehicleListFilter = async (companyName, modelname) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
+    {
+      company_name: companyName,
+      model: modelname,
+    }
+  );
+  return response.data;
+};
+
+export const UpdateVehicleByAdmin = async (
+  props,
+  pucCertificateFile,
+  pucCertificatefilename,
+  insuranceFile,
+  insurancefilename,
+  registrationFile,
+  registrationfilename
+) => {
+  const formData = new FormData();
+  formData.append("vehicle_id", props.vehicle_id);
+  // formData.append("driver_id", props.driver_id);
+  formData.append("company_name", props.company_name);
+  formData.append("model", props.model);
+  formData.append("color", props.color);
+  formData.append(
+    "registration_no_of_vehicle",
+    props.registration_no_of_vehicle
+  );
+  formData.append("chassis_number", props.chassis_number);
+
+  formData.append("vehicle_owner_name", props.vehicle_owner_name);
+  formData.append(
+    "puc_expiration_date",
+    moment(props.puc_expiration_date).format("YYYY-MM-DD")
+  );
+  formData.append(
+    "insurance_expiration_date",
+    moment(props.insurance_expiration_date).format("YYYY-MM-DD")
+  );
+  formData.append(
+    "registration_expiration_date",
+    moment(props.registration_expiration_date).format("YYYY-MM-DD")
+  );
+  formData.append("puc_certificate", pucCertificateFile);
+  formData.append("pucCertificatefilename", pucCertificatefilename);
+  formData.append("insurance", insuranceFile);
+  formData.append("insurancefilename", insurancefilename);
+  formData.append("registration", registrationFile);
+  formData.append("registrationfilename", registrationfilename);
+
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/update_your_vehicle
+
+    `,
+    formData,
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const VehicleDeleteStatusChange = async (id) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/change_vehicle_feild`,
+    {
+      vehicle_id: id,
+      is_active: 0,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const AssignVehicleFunction = async (id, driverVal) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/change_vehicle_feild`,
+    {
+      vehicle_id: id,
+      driver_id: driverVal,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const addWorkingAreaFunction = async (props, id) => {
+  console.log(id);
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/add_working_area`,
+    {
+      city: props.city,
+      area_name: props.area_name,
+      pin_code: props.pin_code,
+      driver_lat: props.driver_lat,
+      driver_log: props.driver_log,
+
+      driver_id: id,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getAllworkingArea = async () => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_area_list?is_active=1`,
+
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const changeUserActivityStatus = async (statusVal, id) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/active_deactive_area`,
+    {
+      id: id,
+      user_active_this_area: statusVal,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const changeAreaStatus = async (statusVal, id) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/active_deactive_area`,
+    {
+      id: id,
+      driver_id: statusVal,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const changeWorkingAreaStatus = async (id) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/active_deactive_area`,
+    {
+      id: id,
+      is_active: "0",
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getAllworkingAreafilter = async (city, area_name, pin_code) => {
+  const response = await axios.get(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_area_list?is_active=1&city=${city}&area_name=${area_name}&pin_code=${pin_code}`,
+
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const devliveryOrderStatus = async (id, statusValue) => {
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/change_order_detaile_status`,
+    {
+      order_id: id,
+      order_status: statusValue,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const addAdminFunction = async (props) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_add_admin`,
+    {
+      admin_email: props.admin_email,
+      admin_name: props.admin_name,
+      admin_phone: props.admin_phone,
+      admin_type: props.admin_type,
+      admin_password: props.admin_password,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getAdminList = async () => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_admin_search`,
+    {
+      admin_name: "",
+      admin_type: "",
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const UpdateAdminFunction = async (props) => {
+  console.log("props data--" + JSON.stringify(props));
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_update_admin`,
+    {
+      id: props.id,
+      admin_email: props.admin_email,
+      admin_name: props.admin_name,
+      admin_phone: props.admin_phone,
+      admin_type: props.admin_type,
+      admin_password: props.admin_password,
+    },
+    { headers: { admin_token: `${admin_token}` } }
+  );
+  return response.data;
+};
+
+export const getAdminfilter = async (name, type) => {
+  const response = await axios.post(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_admin_search`,
+    {
+      admin_name: name,
+      admin_type: type,
+    },
+    { headers: { admin_token: `${admin_token}` } }
   );
   return response.data;
 };

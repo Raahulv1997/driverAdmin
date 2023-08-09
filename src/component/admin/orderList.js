@@ -3,40 +3,36 @@ import { Button } from "react-bootstrap";
 
 import Form from "react-bootstrap/Form";
 import DataTable from "react-data-table-component";
-import axios from "axios";
-import { BsTrash } from "react-icons/bs";
-// import { BiEdit } from "react-icons/bi";
 
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
-import { useNavigate } from "react-router-dom";
 
 import useValidation from "../common/useValidation";
-import { allOrder, OrderStatusChange } from "../api/api";
+import {
+  allOrder,
+  chooseDriverforDelivery,
+  orderAssignByAdmin,
+} from "../api/api";
+import Sidebar from "../common/sidebar";
 
 const OrderList = () => {
-  const navigate = useNavigate();
-
+  const [driverListView, setDriverListView] = useState(false);
   const [ordertable, setorderTable] = useState([]);
+  // const [orderAssignVehicleAlert, setorderAssignVehicleAlert] = useState(false);
+  const [orderAssignAlert, setorderAssignAlert] = useState(false);
   const [apicall, setApicall] = useState(false);
+  const [driverList, setDriverList] = useState([]);
 
+  //search order id filter intial state.............
   const initialFormState = {
-    search: "",
     order_id: "",
-    vendor_id: "",
-    category: "",
-    brand: "",
-    user_id: "",
   };
+
   //order data table column----
   const columns = [
     {
       name: "Order No",
-      selector: (row) => (
-        <p onClick={onOrderClick.bind(this, [row.order_id, row.user_id])}>
-          {row.order_id}
-        </p>
-      ),
+      selector: (row) => <p>{row.order_id}</p>,
       sortable: true,
       width: "150px",
       center: true,
@@ -59,7 +55,7 @@ const OrderList = () => {
 
     {
       name: "Total amount",
-      selector: (row) => row.total_amount,
+      selector: (row) => row.payment,
       sortable: true,
       width: "140px",
       center: true,
@@ -69,15 +65,22 @@ const OrderList = () => {
     },
 
     {
-      name: "Total GST",
-      selector: (row) => row.total_gst,
+      name: "Payment Method",
+      selector: (row) => row.payment_method,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
-      name: "Payment mode",
-      selector: (row) => row.payment_mode,
+      name: "Order status",
+      selector: (row) => row.order_status,
+      sortable: true,
+      width: "140px",
+      center: true,
+    },
+    {
+      name: "Shipping Charges",
+      selector: (row) => row.shipping_charges,
       sortable: true,
       width: "140px",
       center: true,
@@ -96,81 +99,59 @@ const OrderList = () => {
       width: "140px",
       center: true,
     },
+
     {
-      name: "Status",
-      selector: (row) => (
-        <span
-          className={
-            row.status_order === "placed"
-              ? "badge bg-warning"
-              : row.status_order === "pending"
-              ? "badge bg-secondary"
-              : row.status_order === "shipped"
-              ? "badge bg-primary"
-              : row.status_order === "delivered"
-              ? "badge bg-success"
-              : row.status_order === "packed"
-              ? "badge bg-primary"
-              : row.status_order === "cancel"
-              ? "badge bg-danger"
-              : row.status_order === "approved"
-              ? "badge bg-info"
-              : "badge bg-dark"
-          }
-        >
-          {row.status_order === "placed"
-            ? "placed"
-            : row.status_order === "delivered"
-            ? "delivered"
-            : row.status_order === "shipped"
-            ? "shipped"
-            : row.status_order === "packed"
-            ? "packed"
-            : row.status_order === "cancel"
-            ? "cancel"
-            : row.status_order === "approved"
-            ? "approved"
-            : row.status_order === "pending"
-            ? "pending"
-            : "return"}
-        </span>
-      ),
-      sortable: true,
-    },
-    {
-      name: "Change Status",
+      name: "Order Assign ",
+      width: "140px",
       selector: (row) => (
         <Form.Select
           aria-label="Search by delivery"
           size="sm"
           className="w-100"
-          onChange={(e) => onStatusChange(e, row.order_id, row.user_id)}
+          onChange={(e) =>
+            onStatusChange(
+              e,
+              row.order_id,
+              row.total_amount,
+              row.payment_mode,
+              row.delivery_verify_code
+            )
+          }
           name="status_order"
-          value={row.status_order}
+          // value={row.status_order}
         >
-          <option value="">Select status</option>
-          <option value="placed">Placed</option>
-          <option value="pending">Pending</option>
-          <option value="shipped">Shipped</option>
-          <option value="delivered">Delivered</option>
-          <option value="packed">Packed</option>
-          <option value="cancel">Cancel</option>
-          <option value="approved">Approved </option>
-          <option value="return">Return </option>
+          <option value="">drivers</option>
+          {driverList.map((item) => {
+            return (
+              <>
+                <option value={item.driver_id}>
+                  {item.driver_name}&nbsp;
+                  {item.driver_last_name}({item.company_name}
+                  {item.model})
+                </option>
+              </>
+            );
+          })}
         </Form.Select>
       ),
-      sortable: true,
     },
   ];
 
-  const onOrderClick = (id) => {
-    localStorage.setItem("orderid", id[0]);
-    localStorage.setItem("userid", id[1]);
-
-    navigate("/admin/orderDetails");
+  //fuction for close assign order alert and driver list view alert
+  const closeAssignAlert = () => {
+    setorderAssignAlert(false);
+    setDriverListView(false);
   };
-  //order search data function----
 
+  //onclick funtion for choose driver for delivery ---------------
+  const onGetDriverList = async (id) => {
+    const response = await chooseDriverforDelivery();
+
+    setDriverList(response);
+    // setDriverListView(true);
+  };
+
+  //search filter validation object
   const validators = {
     order_id: [
       (value) =>
@@ -182,26 +163,30 @@ const OrderList = () => {
     ],
   };
 
-  const { state, setState, onInputChange, setErrors, errors, validate } =
-    useValidation(initialFormState, validators);
+  //import custom validation ------
+  const { state, setState, onInputChange, errors, validate } = useValidation(
+    initialFormState,
+    validators
+  );
 
-  //order searchd data useEffect....
+  //order list show  useEffect................
   useEffect(() => {
     OrderData();
+    onGetDriverList();
   }, [apicall]);
 
+  //function for get all order list................
   const OrderData = async () => {
     const response = await allOrder();
 
-    setorderTable(response.results);
+    setorderTable(response);
   };
-  //search submit button
 
+  //search submit button
   const submitHandler = async () => {
     if (validate()) {
       const response = await allOrder(state.order_id);
-
-      setorderTable(response.results);
+      setorderTable(response);
     }
   };
 
@@ -212,83 +197,111 @@ const OrderList = () => {
     setApicall(true);
   };
 
-  const onStatusChange = async (e, order_id, user_id) => {
-    const response = await OrderStatusChange(e.target.value, order_id, user_id);
-    console.log("respo--" + response);
-    OrderData();
-    setApicall(true);
+  const onStatusChange = async (e, order_id) => {
+    console.log("driver id" + e.target.value);
+    console.log("order id" + order_id);
+    let response = await orderAssignByAdmin(order_id, e.target.value);
+    setorderAssignAlert(true);
   };
 
   return (
     <div>
-      <div
-        className="dashboard-main-container mt-df25 mt-lg-31"
-        id="dashboard-body"
-      >
-        <div className="">
-          <div className="page_main_contant">
-            <h4>Order List</h4>
-            <div className=" mt-3 p-3">
-              <div className="row pb-3">
-                <div className="col-md-3 col-sm-6 aos_input mb-2">
-                  <Form.Group className="mb-3">
-                    <Form.Control
-                      type="text"
-                      className={
-                        errors.order_id
-                          ? "form-control border border-danger"
-                          : "form-control"
-                      }
-                      placeholder="Search by order no."
-                      name="order_id"
-                      onChange={onInputChange}
-                      value={state.order_id}
-                    />
-                  </Form.Group>
-                  {errors.order_id
-                    ? (errors.order_id || []).map((error) => {
-                        return <small className="text-danger">{error}</small>;
-                      })
-                    : null}
-                </div>
+      <div className="row admin_row">
+        <div className="col-lg-3 col-md-3 admin_sidebar">
+          <Sidebar />
+        </div>
+        <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
+          <div className="main_content_div">
+            <div
+              className="dashboard-main-container mt-df25 mt-lg-31"
+              id="dashboard-body"
+            >
+              <div className="">
+                <div className="page_main_contant">
+                  <h4>Order List</h4>
+                  <div className=" mt-3 p-3">
+                    <div className="row pb-3">
+                      <div className="col-md-3 col-sm-6 aos_input mb-2">
+                        <Form.Group className="mb-3">
+                          <Form.Control
+                            type="text"
+                            className={
+                              errors.order_id
+                                ? "form-control border border-danger"
+                                : "form-control"
+                            }
+                            placeholder="Search by order no."
+                            name="order_id"
+                            onChange={onInputChange}
+                            value={state.order_id}
+                          />
+                        </Form.Group>
+                        {errors.order_id
+                          ? (errors.order_id || []).map((error) => {
+                              return (
+                                <small className="text-danger">{error}</small>
+                              );
+                            })
+                          : null}
+                      </div>
 
-                <div className="col-md-2 col-sm-6 aos_input mb-2">
-                  <div>
-                    <Button
-                      type=""
-                      name=""
-                      value=""
-                      className="button  btn-success main_button w-100"
-                      onClick={submitHandler}
-                    >
-                      Search
-                    </Button>
-                  </div>
-                </div>
-                <div className="col-md-2 col-sm-6 aos_input mb-2">
-                  <div>
-                    <Button
-                      type="reset"
-                      name=""
-                      value=""
-                      className="button btn-success  main_button w-100"
-                      onClick={OnReset}
-                    >
-                      Reset
-                    </Button>
+                      <div className="col-md-2 col-sm-6 aos_input mb-2">
+                        <div>
+                          <Button
+                            type=""
+                            name=""
+                            value=""
+                            className="button  btn-success main_button w-100"
+                            onClick={submitHandler}
+                          >
+                            Search
+                          </Button>
+                        </div>
+                      </div>
+                      <div className="col-md-2 col-sm-6 aos_input mb-2">
+                        <div>
+                          <Button
+                            type="reset"
+                            name=""
+                            value=""
+                            className="button btn-success  main_button w-100"
+                            onClick={OnReset}
+                          >
+                            Reset
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                    <SweetAlert
+                      show={orderAssignAlert}
+                      title="Assigned Successfully"
+                      text={"Assign"}
+                      onConfirm={closeAssignAlert}
+                      // showCancelButton={}
+                      // onCancel={}
+                    />
+
+                    <SweetAlert
+                      show={driverListView}
+                      title="Choose Driver Successfully"
+                      text={"You may see Driver"}
+                      onConfirm={closeAssignAlert}
+                      // showCancelButton={}
+                      // onCancel={}
+                    />
+
+                    <DataTable
+                      columns={columns}
+                      data={ordertable}
+                      pagination
+                      highlightOnHover
+                      pointerOnHover
+                      className={"table_body product_table"}
+                      subHeader
+                    />
                   </div>
                 </div>
               </div>
-
-              <DataTable
-                columns={columns}
-                data={ordertable}
-                pagination
-                highlightOnHover
-                pointerOnHover
-                className={"table_body product_table"}
-                subHeader
-              />
             </div>
           </div>
         </div>

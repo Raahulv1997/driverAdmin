@@ -19,7 +19,8 @@ import "../src/component/css-js/css/orderlist.css";
 import "../src/component/css-js/css/wallet.css";
 import "../src/component/css-js/css/invoice.css";
 import "../src/component/css-js/css/checkout.css";
-import CartProvider from "./component/helper/cart/CartProvider";
+import { BrowserRouter } from "react-router-dom";
+
 // <link rel="stylesheet" to=""  />
 
 //  js
@@ -35,9 +36,9 @@ import CartProvider from "./component/helper/cart/CartProvider";
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <CartProvider>
+    <BrowserRouter>
       <App />
-    </CartProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 
