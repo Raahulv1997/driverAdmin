@@ -62,6 +62,7 @@ const AddDriver = () => {
   const [licencefilename, setLicenceFilename] = useState("");
   const [showmodel, setShowmodel] = useState(false);
   const [workingmodel, setWorkingModel] = useState(false);
+  const [submitError, setSubmitError] = useState(false);
   const [Id, setId] = useState("");
 
   const [driverName, setDriverName] = useState("");
@@ -170,10 +171,6 @@ const AddDriver = () => {
             <b>licence :-</b> {row.licence_no}
           </span>
           <br />
-          <span title={row.aadhar_no}>
-            {" "}
-            <b>Adhar :-</b> {row.aadhar_no}
-          </span>
         </span>
       ),
       sortable: true,
@@ -197,6 +194,7 @@ const AddDriver = () => {
 
     {
       name: "Status",
+      width: "130px",
       selector: (row) => (
         <span
           className={
@@ -410,13 +408,18 @@ const AddDriver = () => {
   //on search box on change
   const searchValueHandler = (e) => {
     setDriverName(e.target.value);
+    setSubmitError(false);
   };
 
   //search submit button
   const submitHandler = async () => {
-    const response = await getDriverFilter(driverName);
+    if (driverName === "") {
+      setSubmitError("driver Empty");
+    } else {
+      const response = await getDriverFilter(driverName);
 
-    setDriverList(response);
+      setDriverList(response);
+    }
   };
 
   // reset button
@@ -555,6 +558,11 @@ const AddDriver = () => {
                             value={driverName}
                           />
                         </Form.Group>
+                        {submitError === "driver Empty" ? (
+                          <span className="text-danger">
+                            Driver Name is Empty
+                          </span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-2 col-sm-6 aos_input mb-2">
