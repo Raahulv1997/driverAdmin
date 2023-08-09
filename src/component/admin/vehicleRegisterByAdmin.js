@@ -12,6 +12,7 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 
 import useValidation from "../common/useValidation";
+import Loader from "../common/loader";
 
 import Sidebar from "../common/sidebar";
 import {
@@ -57,6 +58,9 @@ const VehicleRegisterByAdmin = () => {
   const [VehicleErrorAlert, setVehicleErrorAlert] = useState(false);
   const [vehicleList, setVehicleList] = useState([]);
   const [showmodel, setShowmodel] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [companyNameError, setCompanyNameError] = useState(false);
+  const [modelNameError, setModelNameError] = useState(false);
 
   // search state data---------
   const [searchdata, setsearchData] = useState({
@@ -374,24 +378,37 @@ const VehicleRegisterByAdmin = () => {
   };
 
   //custom validation import--------------
-  const { state, setState, onInputChange, errors, validate } = useValidation(
-    initialFormState,
-    validators
-  );
+  const {
+    state,
+    setState,
+    onInputChange,
+    errors,
+    setErrors,
+    validate,
+  } = useValidation(initialFormState, validators);
 
   // search  inputfield onchange
   const searchValueHandler = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setCompanyNameError(false);
+    setModelNameError(false);
   };
 
   //search submit button
   const submitHandler = async () => {
-    const response = await VehicleListFilter(
-      searchdata.companyName,
-      searchdata.comanyModel
-    );
+    if (searchdata.companyName === "" && searchdata.comanyModel === "") {
+      setCompanyNameError("name is empty");
+      setModelNameError("model is empty");
+    } else {
+      setLoading(true);
+      const response = await VehicleListFilter(
+        searchdata.companyName,
+        searchdata.comanyModel
+      );
+      setLoading(false);
 
-    setVehicleList(response);
+      setVehicleList(response);
+    }
   };
 
   // reset button
@@ -402,6 +419,8 @@ const VehicleRegisterByAdmin = () => {
     });
     getAllVehicleList();
     setapicall(true);
+    setCompanyNameError(false);
+    setModelNameError(false);
   };
 
   //get all vehicle list useEffect -----
@@ -412,13 +431,16 @@ const VehicleRegisterByAdmin = () => {
 
   // get all vehicle list funtion-------------
   const getAllVehicleList = async () => {
+    setLoading(true);
     const response = await VehicleList();
-
+    setLoading(false);
     setVehicleList(response);
   };
 
   const getOnlydriverList = async () => {
+    setLoading(true);
     const response = await getDriverList();
+    setLoading(false);
 
     setDriverList(response);
   };
@@ -523,6 +545,8 @@ const VehicleRegisterByAdmin = () => {
 
   return (
     <div>
+      {loading === true ? <Loader /> : null}
+
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />
@@ -548,6 +572,11 @@ const VehicleRegisterByAdmin = () => {
                             value={searchdata.companyName}
                           />
                         </Form.Group>
+                        {companyNameError === "name is empty" ? (
+                          <span className="text-danger">
+                            Company name is Empty
+                          </span>
+                        ) : null}
                       </div>
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
                         <Form.Group className="mb-3">
@@ -559,6 +588,11 @@ const VehicleRegisterByAdmin = () => {
                             value={searchdata.comanyModel}
                           />
                         </Form.Group>
+                        {modelNameError === "model is empty" ? (
+                          <span className="text-danger">
+                            Model name is Empty
+                          </span>
+                        ) : null}
                       </div>
                       {/* 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">

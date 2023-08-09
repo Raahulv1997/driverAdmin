@@ -25,7 +25,7 @@ import {
 } from "../api/api";
 import moment from "moment";
 import ModelForm from "../common/WorkingAreaModelForm";
-
+import Loader from "../common/loader";
 const AddDriver = () => {
   //add driver json
   const initialFormState = {
@@ -66,7 +66,7 @@ const AddDriver = () => {
   const [Id, setId] = useState("");
 
   const [driverName, setDriverName] = useState("");
-
+  const [loading, setLoading] = useState(false);
   // get all driver list with page refressh
   useEffect(() => {
     getallDriver();
@@ -74,9 +74,11 @@ const AddDriver = () => {
 
   //get all driver fuunction
   const getallDriver = async () => {
+    setLoading(true);
     const response = await getDriverList();
 
     setDriverList(response);
+    setLoading(false);
   };
 
   //data table coloumn-----
@@ -428,6 +430,7 @@ const AddDriver = () => {
 
     getallDriver();
     setapicall(true);
+    setSubmitError(false);
   };
 
   //Driver  add submit button
@@ -533,6 +536,7 @@ const AddDriver = () => {
 
   return (
     <div>
+      {loading === true ? <Loader /> : null}
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />

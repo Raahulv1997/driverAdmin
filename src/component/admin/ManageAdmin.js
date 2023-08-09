@@ -12,6 +12,7 @@ import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
 
 import useValidation from "../common/useValidation";
+import Loader from "../common/loader";
 
 import Sidebar from "../common/sidebar";
 import {
@@ -41,6 +42,10 @@ const ManageAdmin = () => {
   const [AdminErrorAlert, setAdminErrorAlert] = useState(false);
   const [AdminList, setAdminList] = useState([]);
   const [showmodel, setShowmodel] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const [adminNameError, setAdminNameError] = useState(false);
+  const [adminTypeError, setAdminTypeError] = useState(false);
 
   // search state data---------
   const [searchdata, setsearchData] = useState({
@@ -193,15 +198,24 @@ const ManageAdmin = () => {
   // search  inputfield onchange
   const searchValueHandler = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setAdminNameError(false);
+    setAdminTypeError(false);
   };
 
   //search submit button
   const submitHandler = async () => {
-    const response = await getAdminfilter(
-      searchdata.admin_name,
-      searchdata.admin_type
-    );
-    setAdminList(response);
+    if (searchdata.admin_name === "" && searchdata.admin_type === "") {
+      setAdminNameError("nameEmpty");
+      setAdminTypeError("typeEmpty");
+    } else {
+      setLoading(true);
+      const response = await getAdminfilter(
+        searchdata.admin_name,
+        searchdata.admin_type
+      );
+      setLoading(false);
+      setAdminList(response);
+    }
   };
 
   // reset button
@@ -212,6 +226,8 @@ const ManageAdmin = () => {
     });
     getAllAdminList();
     setapicall(true);
+    setAdminNameError(false);
+    setAdminTypeError(false);
   };
 
   //get all Admin list useEffect -----
@@ -221,7 +237,9 @@ const ManageAdmin = () => {
 
   // get all Admin list funtion-------------
   const getAllAdminList = async () => {
+    setLoading(true);
     const response = await getAdminList();
+    setLoading(false);
 
     setAdminList(response);
   };
@@ -316,6 +334,8 @@ const ManageAdmin = () => {
 
   return (
     <div>
+      {loading === true ? <Loader /> : null}
+
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />
@@ -341,6 +361,12 @@ const ManageAdmin = () => {
                             value={searchdata.admin_name}
                           />
                         </Form.Group>
+                        {adminNameError === "nameEmpty" ? (
+                          <span className="text-danger">
+                            {" "}
+                            Admin name is Empty
+                          </span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -358,6 +384,12 @@ const ManageAdmin = () => {
                             <option value="super_admin">Super Admin</option>
                           </Form.Select>
                         </Form.Group>
+                        {adminTypeError === "typeEmpty" ? (
+                          <span className="text-danger">
+                            {" "}
+                            Admin type is Empty
+                          </span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-2 col-sm-6 aos_input mb-2">

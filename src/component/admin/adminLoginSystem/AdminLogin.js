@@ -3,9 +3,11 @@ import { Link, useNavigate } from "react-router-dom";
 import { AdminLoginData } from "../../api/api";
 import useValidation from "../../common/useValidation";
 import Logo from "../../css-js/images/logo1.avif";
+import Loader from "../../common/loader";
 const AdminLogin = () => {
   const navigate = useNavigate();
-  const [errMsg, setErrMsg] = useState("");
+  const [loading, setLoading] = useState(false);
+
   const initialFormState = {
     email: "",
     password: "",
@@ -37,20 +39,25 @@ const AdminLogin = () => {
 
     errors,
     validate,
+    setErrors,
   } = useValidation(initialFormState, validators);
 
   const OnLoginClick = async (e) => {
     e.preventDefault();
 
     if (validate()) {
+      setLoading(true);
       const response = await AdminLoginData(state.email, state.password);
       console.log("resultt--" + JSON.stringify(response));
 
       if (response === "password not matched") {
-        setErrMsg("staus is false");
+        setLoading(false);
+        setErrors("staus is false");
       } else if (response === "email not found") {
-        setErrMsg("email not found");
+        setLoading(false);
+        setErrors("email not found");
       } else if (response[1].true === true) {
+        setLoading(false);
         localStorage.setItem("admin_token", response[1].token);
         navigate("/admin");
       }
@@ -66,6 +73,7 @@ const AdminLogin = () => {
 
   return (
     <div>
+      {loading === true ? <Loader /> : null}
       <section className="user-form-part">
         <div className="container">
           <div className="row justify-content-center">
@@ -152,13 +160,13 @@ const AdminLogin = () => {
                         Remember Me
                       </label>
                     </div> */}
-                    {errMsg === "staus is false" ? (
+                    {errors === "staus is false" ? (
                       <small className="text-danger">
                         credentials Not Matches
                       </small>
                     ) : null}
 
-                    {errMsg === "email not found" ? (
+                    {errors === "email not found" ? (
                       <small className="text-danger">Email not found</small>
                     ) : null}
 

@@ -14,6 +14,7 @@ import {
   orderAssignByAdmin,
 } from "../api/api";
 import Sidebar from "../common/sidebar";
+import Loader from "../common/loader";
 
 const OrderList = () => {
   const [driverListView, setDriverListView] = useState(false);
@@ -22,6 +23,7 @@ const OrderList = () => {
   const [orderAssignAlert, setorderAssignAlert] = useState(false);
   const [apicall, setApicall] = useState(false);
   const [driverList, setDriverList] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   //search order id filter intial state.............
   const initialFormState = {
@@ -144,9 +146,10 @@ const OrderList = () => {
   };
 
   //onclick funtion for choose driver for delivery ---------------
-  const onGetDriverList = async (id) => {
+  const onGetDriverList = async () => {
+    setLoading(true);
     const response = await chooseDriverforDelivery();
-
+    setLoading(false);
     setDriverList(response);
     // setDriverListView(true);
   };
@@ -164,10 +167,14 @@ const OrderList = () => {
   };
 
   //import custom validation ------
-  const { state, setState, onInputChange, errors, validate } = useValidation(
-    initialFormState,
-    validators
-  );
+  const {
+    state,
+    setState,
+    onInputChange,
+    errors,
+    setErrors,
+    validate,
+  } = useValidation(initialFormState, validators);
 
   //order list show  useEffect................
   useEffect(() => {
@@ -177,7 +184,9 @@ const OrderList = () => {
 
   //function for get all order list................
   const OrderData = async () => {
+    setLoading(true);
     const response = await allOrder();
+    setLoading(false);
 
     setorderTable(response);
   };
@@ -185,7 +194,10 @@ const OrderList = () => {
   //search submit button
   const submitHandler = async () => {
     if (validate()) {
+      setLoading(true);
       const response = await allOrder(state.order_id);
+      setLoading(false);
+
       setorderTable(response);
     }
   };
@@ -195,17 +207,18 @@ const OrderList = () => {
     setState({ order_id: "" });
     OrderData();
     setApicall(true);
+    setErrors({});
   };
 
   const onStatusChange = async (e, order_id) => {
-    console.log("driver id" + e.target.value);
-    console.log("order id" + order_id);
-    let response = await orderAssignByAdmin(order_id, e.target.value);
+    await orderAssignByAdmin(order_id, e.target.value);
     setorderAssignAlert(true);
   };
 
   return (
     <div>
+      {loading === true ? <Loader /> : null}
+
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />

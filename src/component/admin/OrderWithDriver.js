@@ -8,10 +8,12 @@ import useValidation from "../common/useValidation";
 import { devliveryOrderStatus, getOrderWithDriver } from "../api/api";
 import Sidebar from "../common/sidebar";
 import moment from "moment";
-
+import Loader from "../common/loader";
 const OrderWithDriver = () => {
   const [ordertable, setorderTable] = useState([]);
   const [apicall, setapicall] = useState(false);
+  const [loading, setLoading] = useState(false);
+
   let admin_token = localStorage.getItem("admin_token");
   // date filter intialstate----------------
   const initialFormState = {
@@ -204,6 +206,7 @@ const OrderWithDriver = () => {
     onInputChange,
 
     errors,
+    setErrors,
     validate,
   } = useValidation(initialFormState, validators);
 
@@ -215,12 +218,14 @@ const OrderWithDriver = () => {
   let headerObj = { headers: { admin_token: admin_token } };
   //get order with driver function------------------
   const OrderData = async () => {
+    setLoading(true);
     const response = await getOrderWithDriver(
       state.date_from,
       state.date_to,
       headerObj
     );
-    console.log("data--" + JSON.stringify(response));
+    setLoading(false);
+
     setorderTable(response);
   };
 
@@ -243,6 +248,7 @@ const OrderWithDriver = () => {
     setState({ date_from: "", date_to: "" });
     OrderData();
     setapicall(true);
+    setErrors({});
   };
 
   const onStatusChange = async (e, id) => {
@@ -253,6 +259,8 @@ const OrderWithDriver = () => {
   };
   return (
     <div>
+      {loading === true ? <Loader /> : null}
+
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />

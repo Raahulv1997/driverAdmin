@@ -6,6 +6,8 @@ import DataTable from "react-data-table-component";
 import { BsTrash } from "react-icons/bs";
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
+import Loader from "../common/loader";
+
 // import useValidation from "../common/useValidation";
 
 import Sidebar from "../common/sidebar";
@@ -24,6 +26,10 @@ const DriverWorkingArea = () => {
   const [ShowDeleteAlert, setShowDeleteAlert] = useState(false);
   const [areaAssignAlert, setareaAssignAlert] = useState(false);
   const [AreaList, setAreaList] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [cityError, setCityError] = useState(false);
+  const [areaNameError, setAreaNameError] = useState(false);
+  const [pincodeError, setPincodeError] = useState(false);
 
   //intial search state data---------
   const [searchdata, setsearchData] = useState({
@@ -195,22 +201,38 @@ const DriverWorkingArea = () => {
   };
 
   const getOnlydriverList = async () => {
+    setLoading(true);
     const response = await getDriverList();
-
+    setLoading(false);
     setDriverList(response);
   };
   const searchValueHandler = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
+    setCityError(false);
+    setAreaNameError(false);
+    setPincodeError(false);
   };
 
   //search submit button
   const submitHandler = async () => {
-    const response = await getAllworkingAreafilter(
-      searchdata.city,
-      searchdata.area_name,
-      searchdata.pin_code
-    );
-    setAreaList(response);
+    if (
+      (searchdata.city === "") & (searchdata.area_name === "") &&
+      searchdata.pin_code === ""
+    ) {
+      setCityError("cityEmpty");
+      setAreaNameError("areaEmpty");
+      setPincodeError("pincodeEmpty");
+    } else {
+      setLoading(true);
+      const response = await getAllworkingAreafilter(
+        searchdata.city,
+        searchdata.area_name,
+        searchdata.pin_code
+      );
+      setLoading(false);
+
+      setAreaList(response);
+    }
   };
 
   // reset button
@@ -222,6 +244,9 @@ const DriverWorkingArea = () => {
     });
     getAllworkList();
     setapicall(true);
+    setCityError(false);
+    setAreaNameError(false);
+    setPincodeError(false);
   };
 
   //get all working area list show
@@ -232,7 +257,9 @@ const DriverWorkingArea = () => {
 
   //function for get all working list area.........
   const getAllworkList = async () => {
+    setLoading(true);
     const response = await getAllworkingArea();
+    setLoading(false);
     console.log("working area--" + JSON.stringify(response));
     setAreaList(response);
   };
@@ -270,6 +297,8 @@ const DriverWorkingArea = () => {
   };
   return (
     <div>
+      {loading === true ? <Loader /> : null}
+
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
           <Sidebar />
@@ -295,6 +324,10 @@ const DriverWorkingArea = () => {
                             value={searchdata.city}
                           />
                         </Form.Group>
+
+                        {cityError === "cityEmpty" ? (
+                          <span className="text-danger"> City is empty</span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -307,6 +340,9 @@ const DriverWorkingArea = () => {
                             value={searchdata.area_name}
                           />
                         </Form.Group>
+                        {areaNameError === "areaEmpty" ? (
+                          <span className="text-danger"> Area is empty</span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -319,6 +355,9 @@ const DriverWorkingArea = () => {
                             value={searchdata.pin_code}
                           />
                         </Form.Group>
+                        {pincodeError === "pincodeEmpty" ? (
+                          <span className="text-danger"> Pincode is empty</span>
+                        ) : null}
                       </div>
 
                       <div className="col-md-2 col-sm-6 aos_input mb-2">
