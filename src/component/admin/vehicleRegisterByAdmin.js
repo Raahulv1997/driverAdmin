@@ -434,6 +434,7 @@ const VehicleRegisterByAdmin = () => {
     setLoading(true);
     const response = await VehicleList();
     setLoading(false);
+    setapicall(false);
     setVehicleList(response);
   };
 
@@ -462,6 +463,7 @@ const VehicleRegisterByAdmin = () => {
 
       if (response.message === "vehicle registration successfull") {
         setVehicleAlert(true);
+        setapicall(true);
       }
 
       if (response.status === false) {
@@ -509,6 +511,7 @@ const VehicleRegisterByAdmin = () => {
 
       if (response.message === "vehicle update successfull") {
         setUpdateVehicleAlert(true);
+        setapicall(true);
       }
     }
   };

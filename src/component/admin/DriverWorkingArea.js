@@ -44,7 +44,7 @@ const DriverWorkingArea = () => {
     {
       name: "City",
 
-      selector: (row) => row.city,
+      selector: (row) => row.city || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -55,7 +55,7 @@ const DriverWorkingArea = () => {
     },
     {
       name: "  Area name",
-      selector: (row) => row.area_name,
+      selector: (row) => row.area_name || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -66,7 +66,7 @@ const DriverWorkingArea = () => {
     },
     {
       name: "Driver name",
-      selector: (row) => row.driver_name,
+      selector: (row) => row.driver_name || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -78,7 +78,7 @@ const DriverWorkingArea = () => {
 
     {
       name: "Pincode ",
-      selector: (row) => row.pin_code,
+      selector: (row) => row.pin_code || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -88,7 +88,7 @@ const DriverWorkingArea = () => {
     },
     {
       name: "Longitude ",
-      selector: (row) => row.driver_log,
+      selector: (row) => row.driver_log || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -99,7 +99,7 @@ const DriverWorkingArea = () => {
 
     {
       name: "Latitude",
-      selector: (row) => row.driver_lat,
+      selector: (row) => row.driver_lat || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,

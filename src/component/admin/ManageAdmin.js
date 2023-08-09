@@ -60,7 +60,7 @@ const ManageAdmin = () => {
     {
       name: "Admin Name",
 
-      selector: (row) => row.admin_name,
+      selector: (row) => row.admin_name || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -71,7 +71,7 @@ const ManageAdmin = () => {
     },
     {
       name: "Admin Phone",
-      selector: (row) => row.admin_phone,
+      selector: (row) => row.admin_phone || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -83,7 +83,7 @@ const ManageAdmin = () => {
 
     {
       name: "Admin Email",
-      selector: (row) => row.admin_email,
+      selector: (row) => row.admin_email || <b>unavailable</b>,
       sortable: true,
       width: "250px",
       center: true,
@@ -94,7 +94,7 @@ const ManageAdmin = () => {
 
     {
       name: "Admin password ",
-      selector: (row) => row.admin_password,
+      selector: (row) => row.admin_password || <b>unavailable</b>,
       sortable: true,
       width: "160px",
       center: true,
@@ -105,7 +105,7 @@ const ManageAdmin = () => {
 
     {
       name: "Admin type",
-      selector: (row) => row.admin_type,
+      selector: (row) => row.admin_type || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -530,7 +530,7 @@ const ManageAdmin = () => {
                         ? "form-control border border-danger"
                         : "form-control"
                     }
-                    disabled={showmodel === "add" ? "false" : "true"}
+                    // disabled={showmodel === "add" ? "false" :  "true"}
                     value={state.admin_email}
                     name="admin_email"
                     onChange={onInputChange}

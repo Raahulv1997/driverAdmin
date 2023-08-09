@@ -15,6 +15,7 @@ import {
 } from "../api/api";
 import Sidebar from "../common/sidebar";
 import Loader from "../common/loader";
+import moment from "moment";
 
 const OrderList = () => {
   const [driverListView, setDriverListView] = useState(false);
@@ -34,7 +35,7 @@ const OrderList = () => {
   const columns = [
     {
       name: "Order No",
-      selector: (row) => <p>{row.order_id}</p>,
+      selector: (row) => <p>{row.order_id}</p> || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -45,7 +46,7 @@ const OrderList = () => {
     },
     {
       name: "Order Quantity",
-      selector: (row) => row.total_order_product_quantity,
+      selector: (row) => row.total_order_product_quantity || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -57,7 +58,7 @@ const OrderList = () => {
 
     {
       name: "Total amount",
-      selector: (row) => row.payment,
+      selector: (row) => row.payment || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -68,35 +69,37 @@ const OrderList = () => {
 
     {
       name: "Payment Method",
-      selector: (row) => row.payment_method,
+      selector: (row) => row.payment_method || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Order status",
-      selector: (row) => row.order_status,
+      selector: (row) => row.order_status || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Shipping Charges",
-      selector: (row) => row.shipping_charges,
+      selector: (row) => row.shipping_charges || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Order date",
-      selector: (row) => row.order_date,
+      selector: (row) =>
+        moment(row.order_date).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Delivery date",
-      selector: (row) => row.delivery_date,
+      selector: (row) =>
+        moment(row.delivery_date).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -127,7 +130,7 @@ const OrderList = () => {
             return (
               <>
                 <option value={item.driver_id}>
-                  {item.driver_name}&nbsp;
+                  {item.driver_name} &nbsp;
                   {item.driver_last_name}({item.company_name}
                   {item.model})
                 </option>

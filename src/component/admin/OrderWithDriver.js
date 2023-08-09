@@ -36,7 +36,7 @@ const OrderWithDriver = () => {
     },
     {
       name: "Driver Name",
-      selector: (row) => row.driver_name,
+      selector: (row) => row.driver_name || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -48,7 +48,7 @@ const OrderWithDriver = () => {
 
     {
       name: "Driver Lastname",
-      selector: (row) => row.driver_last_name,
+      selector: (row) => row.driver_last_name || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -59,7 +59,7 @@ const OrderWithDriver = () => {
     },
     {
       name: "Total amount",
-      selector: (row) => row.payment,
+      selector: (row) => row.payment || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -70,14 +70,7 @@ const OrderWithDriver = () => {
 
     {
       name: "Username",
-      selector: (row) => row.user_name,
-      sortable: true,
-      width: "140px",
-      center: true,
-    },
-    {
-      name: "Order Status",
-      selector: (row) => row.order_status,
+      selector: (row) => row.user_name || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -85,6 +78,7 @@ const OrderWithDriver = () => {
 
     {
       name: "Status",
+      width: "170px",
       selector: (row) => (
         <span
           className={
@@ -118,6 +112,7 @@ const OrderWithDriver = () => {
     },
     {
       name: "Change Status",
+      width: "150px",
       selector: (row) => (
         <Form.Select
           aria-label="Search by delivery"
@@ -143,14 +138,15 @@ const OrderWithDriver = () => {
 
     {
       name: "Delivery Address",
-      selector: (row) => row.address,
+      selector: (row) => row.address || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Order date",
-      selector: (row) => moment(row.order_date).format("YYYY-MM-DD"),
+      selector: (row) =>
+        moment(row.order_date).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -158,21 +154,23 @@ const OrderWithDriver = () => {
 
     {
       name: "Delivery date",
-      selector: (row) => moment(row.delivery_date).format("YYYY-MM-DD"),
+      selector: (row) =>
+        moment(row.delivery_date).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "Order Assign date",
-      selector: (row) => moment(row.order_asign_date).format("YYYY-MM-DD"),
+      selector: (row) =>
+        moment(row.order_asign_date).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
     },
     {
       name: "DriverContact",
-      selector: (row) => row.contect_no,
+      selector: (row) => row.contect_no || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,

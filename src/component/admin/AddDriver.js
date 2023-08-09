@@ -112,11 +112,12 @@ const AddDriver = () => {
     {
       name: "Name",
 
-      selector: (row) => (
-        <span>
-          {row.driver_name} &nbsp;{row.driver_last_name}
-        </span>
-      ),
+      selector: (row) =>
+        (
+          <span>
+            {row.driver_name} &nbsp;{row.driver_last_name}
+          </span>
+        ) || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -128,7 +129,8 @@ const AddDriver = () => {
 
     {
       name: "Date of Birth",
-      selector: (row) => row.date_of_birth,
+      selector: (row) =>
+        moment(row.date_of_birth).format("YYYY-MM-DD") || <b>unavailable</b>,
       sortable: true,
       width: "150px",
       center: true,
@@ -143,7 +145,7 @@ const AddDriver = () => {
       selector: (row) => (
         <span>
           <span title={row.current_address}>
-            <b>Address:- </b> {row.current_address}
+            <b>Address:- </b> {row.current_address} || <b>unavailable</b>
           </span>
           <br />
           <span title={row.email}>
@@ -165,12 +167,12 @@ const AddDriver = () => {
       selector: (row) => (
         <span>
           <span title={row.contect_no}>
-            <b>Contact :-</b> {row.contect_no}
+            <b>Contact :-</b> {row.contect_no}|| <b>unavailable</b>
           </span>
           <br />
           <span title={row.licence_no}>
             {" "}
-            <b>licence :-</b> {row.licence_no}
+            <b>licence :-</b> {row.licence_no}|| <b>unavailable</b>
           </span>
           <br />
         </span>
@@ -523,6 +525,7 @@ const AddDriver = () => {
     await DriverDeleteStatusChange(Id);
 
     setShowDeleteAlert(false);
+    getallDriver();
     setapicall(true);
   };
 
@@ -646,7 +649,7 @@ const AddDriver = () => {
               <div className="col-md-6">
                 <Form.Group className="mb-3">
                   <Form.Label className="" column sm="12">
-                    Driver Last Name <small className="text-danger">*</small>
+                    Driver First Name <small className="text-danger">*</small>
                   </Form.Label>
                   <Form.Control
                     className={
