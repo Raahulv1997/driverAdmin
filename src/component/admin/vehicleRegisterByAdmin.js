@@ -60,12 +60,16 @@ const VehicleRegisterByAdmin = () => {
   const [showmodel, setShowmodel] = useState(false);
   const [loading, setLoading] = useState(false);
   const [companyNameError, setCompanyNameError] = useState(false);
-  const [modelNameError, setModelNameError] = useState(false);
+
+  const [pucErrorMessage, setPucErrorMessage] = useState("");
+  const [insurenceerrorMessage, setInsurenceErrorMessage] = useState("");
+  const [registrationErrorMessage, setRegistrationErrorMessage] = useState("");
+
+  const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
 
   // search state data---------
   const [searchdata, setsearchData] = useState({
     companyName: "",
-    comanyModel: "",
   });
 
   const [Id, setId] = useState("");
@@ -106,7 +110,7 @@ const VehicleRegisterByAdmin = () => {
 
     {
       name: "Owner name",
-      selector: (row) => row.vehicle_owner_name,
+      selector: (row) => row.vehicle_owner_name || <b>unavailable</b>,
       sortable: true,
       width: "140px",
       center: true,
@@ -147,9 +151,18 @@ const VehicleRegisterByAdmin = () => {
       width: "280px",
       center: true,
     },
+    {
+      name: "Assigned Driver",
+      selector: (row) => row.driver_name || <b>unavailable</b>,
+      sortable: true,
+      width: "140px",
+      center: true,
+    },
 
     {
       name: "Vehicle Assign ",
+      width: "140px",
+
       selector: (row) => (
         <Form.Select
           aria-label="Search by delivery"
@@ -157,7 +170,7 @@ const VehicleRegisterByAdmin = () => {
           className="w-100"
           onChange={(e) => onStatusChange(row.vehicle_id, e)}
           name="status_order"
-          // value={row.status_order}
+          value={row.driver_id}
         >
           <option value="">drivers</option>
           {driverList.map((item) => {
@@ -284,20 +297,59 @@ const VehicleRegisterByAdmin = () => {
 
   //on polution certificate upload---------------------
   const OnPucCerificateUpload = (e) => {
-    setPucCertificateFile(e.target.files[0]);
-    setPucCertificateFilename(e.target.files[0].name);
+    // setPucCertificateFile(e.target.files[0]);
+    // setPucCertificateFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setPucCertificateFile(selectedFile);
+        setPucCertificateFilename(selectedFile.name);
+        setPucErrorMessage("");
+      } else {
+        setPucCertificateFile(null);
+        setPucCertificateFilename("");
+        setPucErrorMessage("Invalid format");
+      }
+    }
   };
 
   //on Insurence certificate upload---------------
   const OnInsuranceUpload = (e) => {
-    setInsuranceFile(e.target.files[0]);
-    setInsuranceFilename(e.target.files[0].name);
+    // setInsuranceFile(e.target.files[0]);
+    // setInsuranceFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setInsuranceFile(selectedFile);
+        setInsuranceFilename(selectedFile.name);
+        setInsurenceErrorMessage("");
+      } else {
+        setInsuranceFile(null);
+        setInsuranceFilename("");
+        setInsurenceErrorMessage("Invalid format");
+      }
+    }
   };
 
   //on regisration card upload---------------
   const OnRegistrationUpload = (e) => {
-    setRegistrationFile(e.target.files[0]);
-    setregistrationFilename(e.target.files[0].name);
+    // setRegistrationFile(e.target.files[0]);
+    // setregistrationFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setRegistrationFile(selectedFile);
+        setregistrationFilename(selectedFile.name);
+        setRegistrationErrorMessage("");
+      } else {
+        setRegistrationFile(null);
+        setregistrationFilename("");
+        setRegistrationErrorMessage("Invalid format");
+      }
+    }
   };
 
   // vehicle  validation---------------
@@ -391,20 +443,15 @@ const VehicleRegisterByAdmin = () => {
   const searchValueHandler = (e) => {
     setsearchData({ ...searchdata, [e.target.name]: e.target.value });
     setCompanyNameError(false);
-    setModelNameError(false);
   };
 
   //search submit button
   const submitHandler = async () => {
-    if (searchdata.companyName === "" && searchdata.comanyModel === "") {
-      setCompanyNameError("name is empty");
-      setModelNameError("model is empty");
+    if (searchdata.companyName === "") {
+      setCompanyNameError("Search by  is empty");
     } else {
       setLoading(true);
-      const response = await VehicleListFilter(
-        searchdata.companyName,
-        searchdata.comanyModel
-      );
+      const response = await VehicleListFilter(searchdata.companyName);
       setLoading(false);
 
       setVehicleList(response);
@@ -415,12 +462,10 @@ const VehicleRegisterByAdmin = () => {
   const OnReset = () => {
     setsearchData({
       companyName: "",
-      comanyModel: "",
     });
-    getAllVehicleList();
+    // getAllVehicleList();
     setapicall(true);
     setCompanyNameError(false);
-    setModelNameError(false);
   };
 
   //get all vehicle list useEffect -----
@@ -442,7 +487,7 @@ const VehicleRegisterByAdmin = () => {
     setLoading(true);
     const response = await getDriverList();
     setLoading(false);
-
+    setapicall(false);
     setDriverList(response);
   };
 
@@ -493,6 +538,10 @@ const VehicleRegisterByAdmin = () => {
     setShowmodel(false);
 
     setState(initialFormState);
+    setErrors({});
+    setPucErrorMessage("");
+    setInsurenceErrorMessage("");
+    setRegistrationErrorMessage("");
   };
 
   //Vehicle update fuction--
@@ -530,6 +579,7 @@ const VehicleRegisterByAdmin = () => {
 
   const closeAssignAlert = () => {
     setvehicleAssignAlert(false);
+    setapicall(true);
     // setDriverListView(false);
   };
   //delete Vehicle alert---
@@ -569,34 +619,19 @@ const VehicleRegisterByAdmin = () => {
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="text"
-                            placeholder="Search by Company Name"
+                            placeholder="Search by Company,Model,Owner,Chassis "
                             name="companyName"
                             onChange={searchValueHandler}
                             value={searchdata.companyName}
                           />
                         </Form.Group>
-                        {companyNameError === "name is empty" ? (
+                        {companyNameError === "Search by  is empty" ? (
                           <span className="text-danger">
-                            Company name is Empty
+                            Search by is Empty
                           </span>
                         ) : null}
                       </div>
-                      <div className="col-md-3 col-sm-6 aos_input mb-2">
-                        <Form.Group className="mb-3">
-                          <Form.Control
-                            type="text"
-                            placeholder="Search by Model"
-                            name="comanyModel"
-                            onChange={searchValueHandler}
-                            value={searchdata.comanyModel}
-                          />
-                        </Form.Group>
-                        {modelNameError === "model is empty" ? (
-                          <span className="text-danger">
-                            Model name is Empty
-                          </span>
-                        ) : null}
-                      </div>
+
                       {/* 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
                         <Form.Group className="mb-3">
@@ -740,7 +775,11 @@ const VehicleRegisterByAdmin = () => {
                     type="text"
                     value={state.company_name}
                     name="company_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="company_name"
                   />
                   {errors.company_name
@@ -766,7 +805,11 @@ const VehicleRegisterByAdmin = () => {
                     }
                     value={state.model}
                     name="model"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="model"
                   />
                   {errors.model
@@ -792,7 +835,11 @@ const VehicleRegisterByAdmin = () => {
                     }
                     value={state.color}
                     name="color"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="color"
                   />
                   {errors.color
@@ -843,7 +890,11 @@ const VehicleRegisterByAdmin = () => {
                     }
                     value={state.chassis_number}
                     name="chassis_number"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="chassis_number"
                   />
                   {errors.chassis_number
@@ -866,6 +917,12 @@ const VehicleRegisterByAdmin = () => {
                     id="puc_certificate"
                   />
                 </Form.Group>
+                {pucErrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
 
               <div className="col-md-6">
@@ -881,6 +938,12 @@ const VehicleRegisterByAdmin = () => {
                     id="insurance"
                   />
                 </Form.Group>
+                {insurenceerrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
 
               <div className="col-md-6">
@@ -896,6 +959,12 @@ const VehicleRegisterByAdmin = () => {
                     id="registration"
                   />
                 </Form.Group>
+                {registrationErrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
 
               <div className="col-md-6">
@@ -912,7 +981,11 @@ const VehicleRegisterByAdmin = () => {
                     type="text"
                     value={state.vehicle_owner_name}
                     name="vehicle_owner_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="vehicle_owner_name"
                   />
                   {errors.vehicle_owner_name

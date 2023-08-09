@@ -67,6 +67,11 @@ const AddDriver = () => {
 
   const [driverName, setDriverName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [imagererrorMessage, setImageErrorMessage] = useState("");
+  const [adharerrorMessage, setAdharErrorMessage] = useState("");
+  const [licenceerrorMessage, setLicenceErrorMessage] = useState("");
+
+  const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
   // get all driver list with page refressh
   useEffect(() => {
     getallDriver();
@@ -276,20 +281,59 @@ const AddDriver = () => {
 
   //image upload onchange
   const OnImageUpload = (e) => {
-    setImageFile(e.target.files[0]);
-    setImageFilename(e.target.files[0].name);
+    // setImageFile(e.target.files[0]);
+    // setImageFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setImageFile(selectedFile);
+        setImageFilename(selectedFile.name);
+        setImageErrorMessage("");
+      } else {
+        setImageFile(null);
+        setImageFilename("");
+        setImageErrorMessage("Invalid format");
+      }
+    }
   };
 
   //on aadhar card upload
   const OnAdharUpload = (e) => {
-    setAdharFile(e.target.files[0]);
-    setAdharFilename(e.target.files[0].name);
+    // setAdharFile(e.target.files[0]);
+    // setAdharFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setAdharFile(selectedFile);
+        setAdharFilename(selectedFile.name);
+        setAdharErrorMessage("");
+      } else {
+        setAdharFile(null);
+        setAdharFilename("");
+        setAdharErrorMessage("Invalid format");
+      }
+    }
   };
 
   //on licence card  upload function
   const OnLicenceUpload = (e) => {
-    setLicenceFile(e.target.files[0]);
-    setLicenceFilename(e.target.files[0].name);
+    // setLicenceFile(e.target.files[0]);
+    // setLicenceFilename(e.target.files[0].name);
+
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      if (allowedFormats.includes(selectedFile.type)) {
+        setLicenceFile(selectedFile);
+        setLicenceFilename(selectedFile.name);
+        setLicenceErrorMessage("");
+      } else {
+        setLicenceFile(null);
+        setLicenceFilename("");
+        setLicenceErrorMessage("Invalid format");
+      }
+    }
   };
 
   //validation function for add driver
@@ -404,10 +448,14 @@ const AddDriver = () => {
     ],
   };
 
-  const { state, setState, onInputChange, errors, validate } = useValidation(
-    initialFormState,
-    validators
-  );
+  const {
+    state,
+    setState,
+    onInputChange,
+    errors,
+    setErrors,
+    validate,
+  } = useValidation(initialFormState, validators);
 
   //on search box on change
   const searchValueHandler = (e) => {
@@ -475,6 +523,10 @@ const AddDriver = () => {
     setShowmodel(false);
 
     setState(initialFormState);
+    setImageErrorMessage("");
+    setAdharErrorMessage("");
+    setLicenceErrorMessage("");
+    setErrors({});
   };
 
   //add working area model close
@@ -660,7 +712,11 @@ const AddDriver = () => {
                     type="text"
                     value={state.driver_name}
                     name="driver_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="driver_name"
                   />
                   {errors.driver_name
@@ -686,7 +742,11 @@ const AddDriver = () => {
                     }
                     value={state.driver_last_name}
                     name="driver_last_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="driver_last_name"
                   />
                   {errors.driver_last_name
@@ -761,6 +821,12 @@ const AddDriver = () => {
                     id="image"
                   />
                 </Form.Group>
+                {imagererrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
 
               <div className="col-md-6">
@@ -776,6 +842,12 @@ const AddDriver = () => {
                     id="aadhar"
                   />
                 </Form.Group>
+                {adharerrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
               <div className="col-md-6">
                 <Form.Group className="mb-3">
@@ -790,6 +862,12 @@ const AddDriver = () => {
                     id="licence"
                   />
                 </Form.Group>
+                {licenceerrorMessage === "Invalid format" ? (
+                  <span className="text-danger">
+                    Invalid image format. Please select a jpg, jpeg, or png
+                    file.
+                  </span>
+                ) : null}
               </div>
               {/* <div className="col-md-6">
                         <Form.Group className="mb-3">
@@ -891,7 +969,11 @@ const AddDriver = () => {
                     }
                     value={state.age}
                     name="age"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 3) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="age"
                   />
                   {errors.age
@@ -916,7 +998,12 @@ const AddDriver = () => {
                     type="number"
                     value={state.contect_no}
                     name="contect_no"
-                    onChange={onInputChange}
+                    // onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 10) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="contect_no"
                   />
                   {errors.contect_no
@@ -940,7 +1027,11 @@ const AddDriver = () => {
                     type="email"
                     value={state.email}
                     name="email"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 40) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="email"
                   />
                   {errors.email
@@ -965,7 +1056,11 @@ const AddDriver = () => {
                     type="password"
                     value={state.password}
                     name="password"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="password"
                   />
                   {errors.password
@@ -1019,7 +1114,11 @@ const AddDriver = () => {
                     type="text"
                     value={state.aadhar_no}
                     name="aadhar_no"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="aadhar_no"
                   />
                   {errors.aadhar_no
@@ -1044,7 +1143,11 @@ const AddDriver = () => {
                     type="text"
                     value={state.licence_no}
                     name="licence_no"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="licence_no"
                   />
                   {errors.licence_no

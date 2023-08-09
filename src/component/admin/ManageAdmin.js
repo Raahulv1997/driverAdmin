@@ -190,10 +190,14 @@ const ManageAdmin = () => {
   };
 
   //custom validation import--------------
-  const { state, setState, onInputChange, errors, validate } = useValidation(
-    initialFormState,
-    validators
-  );
+  const {
+    state,
+    setState,
+    onInputChange,
+    errors,
+    setErrors,
+    validate,
+  } = useValidation(initialFormState, validators);
 
   // search  inputfield onchange
   const searchValueHandler = (e) => {
@@ -284,6 +288,7 @@ const ManageAdmin = () => {
     setShowmodel(false);
 
     setState(initialFormState);
+    setErrors({});
   };
 
   //Admin update fuction--
@@ -480,7 +485,11 @@ const ManageAdmin = () => {
                     type="text"
                     value={state.admin_name}
                     name="admin_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="admin_name"
                   />
                   {errors.admin_name
@@ -506,7 +515,11 @@ const ManageAdmin = () => {
                     }
                     value={state.admin_phone}
                     name="admin_phone"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 10) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="admin_phone"
                   />
                   {errors.admin_phone
@@ -533,7 +546,11 @@ const ManageAdmin = () => {
                     // disabled={showmodel === "add" ? "false" :  "true"}
                     value={state.admin_email}
                     name="admin_email"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="admin_email"
                   />
                   {errors.admin_email
@@ -559,7 +576,11 @@ const ManageAdmin = () => {
                     }
                     value={state.admin_password}
                     name="admin_password"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="admin_password"
                   />
                   {errors.admin_password

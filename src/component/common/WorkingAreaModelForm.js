@@ -119,7 +119,11 @@ const ModelForm = ({
                     type="text"
                     value={state.city}
                     name="city"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="city"
                   />
                   {errors.city
@@ -145,7 +149,11 @@ const ModelForm = ({
                     }
                     value={state.area_name}
                     name="area_name"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="area_name"
                   />
                   {errors.area_name
@@ -171,7 +179,11 @@ const ModelForm = ({
                     }
                     value={state.pin_code}
                     name="pin_code"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="pin_code"
                   />
                   {errors.pin_code
@@ -197,7 +209,11 @@ const ModelForm = ({
                     }
                     value={state.driver_lat}
                     name="driver_lat"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="driver_lat"
                   />
                   {errors.driver_lat
@@ -222,7 +238,11 @@ const ModelForm = ({
                     }
                     value={state.driver_log}
                     name="driver_log"
-                    onChange={onInputChange}
+                    onChange={(v) => {
+                      if (v.target.value.length <= 30) {
+                        onInputChange(v);
+                      }
+                    }}
                     id="driver_log"
                   />
                   {errors.driver_log

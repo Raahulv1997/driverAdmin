@@ -114,7 +114,7 @@ const DriverWorkingArea = () => {
           className="w-100"
           onChange={(e) => onStatusChangee(row.id, e)}
           name="status_order"
-          // value={row.status_order}
+          value={row.driver_id}
         >
           <option value="">drivers</option>
           {driverList.map((item) => {
@@ -195,14 +195,15 @@ const DriverWorkingArea = () => {
     const res = await changeAreaStatus(e.target.value, id);
     if (res.message === "successfull changed working area status  ") {
       setareaAssignAlert(true);
-      getAllworkList();
-      setapicall(true);
+      // getAllworkList();
+      // setapicall(true);
     }
   };
 
   const getOnlydriverList = async () => {
     setLoading(true);
     const response = await getDriverList();
+    setapicall(false);
     setLoading(false);
     setDriverList(response);
   };
@@ -260,6 +261,7 @@ const DriverWorkingArea = () => {
     setLoading(true);
     const response = await getAllworkingArea();
     setLoading(false);
+    setapicall(false);
     console.log("working area--" + JSON.stringify(response));
     setAreaList(response);
   };
@@ -293,6 +295,7 @@ const DriverWorkingArea = () => {
 
   const closeAssignAlert = () => {
     setareaAssignAlert(false);
+    setapicall(true);
     // setDriverListView(false);
   };
   return (

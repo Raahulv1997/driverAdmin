@@ -401,12 +401,12 @@ export const VehicleListById = async (id) => {
   return response.data;
 };
 
-export const VehicleListFilter = async (companyName, modelname) => {
+export const VehicleListFilter = async (companyName) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
     {
-      company_name: companyName,
-      model: modelname,
+      search: companyName,
+      // model: modelname,
     }
   );
   return response.data;
