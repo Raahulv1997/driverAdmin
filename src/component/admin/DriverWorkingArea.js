@@ -304,7 +304,7 @@ const DriverWorkingArea = () => {
 
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "workingArea" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -398,7 +398,6 @@ const DriverWorkingArea = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body workingArea_table"}
-                      subHeader
                     />
                   </div>
                 </div>

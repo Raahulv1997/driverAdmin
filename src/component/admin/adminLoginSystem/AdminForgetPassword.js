@@ -1,17 +1,20 @@
 import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import {
+  Link,
+  //  useNavigate
+} from "react-router-dom";
 import Logo from "../../css-js/images/logo1.avif";
 import Spinner from "react-bootstrap/Spinner";
-import { getForgetOtpAdmin } from "../../api/api";
+// import { getForgetOtpAdmin } from "../../api/api";
 
 const AdminForgetPassword = () => {
-  const [emailVal, setemailVal] = useState("");
+  // const [emailVal, setemailVal] = useState("");
   const [spinner, setSpinner] = useState(false);
   const [emailError, setEmailError] = useState(false);
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
   const onEmailChange = (e) => {
-    setemailVal(e.target.value);
+    // setemailVal(e.target.value);
     setEmailError(false);
   };
 

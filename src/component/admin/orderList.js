@@ -18,9 +18,8 @@ import Loader from "../common/loader";
 import moment from "moment";
 
 const OrderList = () => {
-  const [driverListView, setDriverListView] = useState(false);
   const [ordertable, setorderTable] = useState([]);
-  // const [orderAssignVehicleAlert, setorderAssignVehicleAlert] = useState(false);
+  const [orderNoVehicleAlert, setorderNoVehicleAlert] = useState(false);
   const [orderAssignAlert, setorderAssignAlert] = useState(false);
   const [apicall, setApicall] = useState(false);
   const [driverList, setDriverList] = useState([]);
@@ -122,6 +121,7 @@ const OrderList = () => {
               row.delivery_verify_code
             )
           }
+          value={row.driver_id}
           name="status_order"
           // value={row.status_order}
         >
@@ -145,7 +145,8 @@ const OrderList = () => {
   //fuction for close assign order alert and driver list view alert
   const closeAssignAlert = () => {
     setorderAssignAlert(false);
-    setDriverListView(false);
+    setorderNoVehicleAlert(false);
+    setApicall(true);
   };
 
   //onclick funtion for choose driver for delivery ---------------
@@ -154,6 +155,7 @@ const OrderList = () => {
     const response = await chooseDriverforDelivery();
     setLoading(false);
     setDriverList(response);
+    setApicall(false);
     // setDriverListView(true);
   };
 
@@ -190,7 +192,7 @@ const OrderList = () => {
     setLoading(true);
     const response = await allOrder();
     setLoading(false);
-
+    setApicall(false);
     setorderTable(response);
   };
 
@@ -214,8 +216,15 @@ const OrderList = () => {
   };
 
   const onStatusChange = async (e, order_id) => {
-    await orderAssignByAdmin(order_id, e.target.value);
-    setorderAssignAlert(true);
+    let response = await orderAssignByAdmin(order_id, e.target.value);
+    console.log("ddd--" + JSON.stringify(response));
+    if (response.message === "driver has no vehicle") {
+      setorderNoVehicleAlert(true);
+    }
+
+    if (response.affectedRows === 1) {
+      setorderAssignAlert(true);
+    }
   };
 
   return (
@@ -224,7 +233,7 @@ const OrderList = () => {
 
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "order List" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -296,11 +305,10 @@ const OrderList = () => {
                       // showCancelButton={}
                       // onCancel={}
                     />
-
                     <SweetAlert
-                      show={driverListView}
-                      title="Choose Driver Successfully"
-                      text={"You may see Driver"}
+                      show={orderNoVehicleAlert}
+                      title="Driver has no vehicle"
+                      text={"Not Assign"}
                       onConfirm={closeAssignAlert}
                       // showCancelButton={}
                       // onCancel={}
@@ -313,7 +321,6 @@ const OrderList = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body product_table"}
-                      subHeader
                     />
                   </div>
                 </div>

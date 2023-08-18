@@ -1,9 +1,9 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
 
-const Sidebar = () => {
+const Sidebar = (props) => {
   const admin_token = localStorage.getItem("admin_token");
-
+  console.log("props--" + JSON.stringify(props.style));
   const navigate = useNavigate();
   const OnLogoutClick = () => {
     if (admin_token !== null) {
@@ -19,7 +19,13 @@ const Sidebar = () => {
     <div>
       <div className="banner-category">
         <ul className="banner-category-list vh-100 pt-4">
-          <li className="banner-category-item">
+          <li
+            className={
+              props.style.message === "Add driver"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to="/admin">
               <i className="flaticon-vegetable"></i>
               <span>Driver</span>
@@ -98,7 +104,14 @@ const Sidebar = () => {
               </div>
             </div> */}
           </li>
-          <li className="banner-category-item">
+
+          <li
+            className={
+              props.style.message === "order with driver"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to="/orderWithDriver">
               <i className="flaticon-groceries"></i>
               <span>Driver Orders</span>
@@ -160,7 +173,14 @@ const Sidebar = () => {
               </div>
             </div> */}
           </li>
-          <li className="banner-category-item">
+
+          <li
+            className={
+              props.style.message === "vehicleRegister"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to={"/vehicleRegisterByadmin"}>
               <i className="flaticon-fruit"></i>
               <span>Driver Vehicle</span>
@@ -205,7 +225,14 @@ const Sidebar = () => {
               </div>
             </div> */}
           </li>
-          <li className="banner-category-item">
+
+          <li
+            className={
+              props.style.message === "order List"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to="/orderList">
               <i className="flaticon-dairy-products"></i>
               <span>Customer Order</span>
@@ -233,7 +260,14 @@ const Sidebar = () => {
               </div>
             </div> */}
           </li>
-          <li className="banner-category-item">
+
+          <li
+            className={
+              props.style.message === "workingArea"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to="/driverWorkingArea">
               <i className="flaticon-groceries"></i>
               <span>Driver Working Area</span>
@@ -296,7 +330,13 @@ const Sidebar = () => {
             </div> */}
           </li>
 
-          <li className="banner-category-item">
+          <li
+            className={
+              props.style.message === "manageAdmin"
+                ? "banner-category-item active"
+                : "banner-category-item "
+            }
+          >
             <Link to="/manageAdmin">
               <i className="flaticon-groceries"></i>
               <span>Manage Admin</span>
@@ -360,7 +400,7 @@ const Sidebar = () => {
           </li>
 
           <li className="banner-category-item">
-            <Link to="/manageAdmin">
+            <Link to="">
               <i
                 className="flaticon-groceries"
                 style={{ cursor: "pointer" }}

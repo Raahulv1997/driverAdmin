@@ -23,8 +23,6 @@ import AdminForgetPassword from "./component/admin/adminLoginSystem/AdminForgetP
 import AuthWrapper from "./Authwrapper";
 
 function Layout1() {
-  const adminLogged = localStorage.getItem("admin_token");
-
   return (
     <div>
       <Routes>

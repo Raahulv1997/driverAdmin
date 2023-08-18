@@ -39,6 +39,7 @@ const ManageAdmin = () => {
   const [superAdminAddAlert, setsuperAdminAddAlert] = useState(false);
   const [updateAdminAlert, setUpdateAdminAlert] = useState(false);
   const [AdminAlert, setAdminAlert] = useState(false);
+
   const [AdminErrorAlert, setAdminErrorAlert] = useState(false);
   const [AdminList, setAdminList] = useState([]);
   const [showmodel, setShowmodel] = useState(false);
@@ -254,6 +255,9 @@ const ManageAdmin = () => {
 
     if (validate()) {
       const response = await addAdminFunction(state);
+      if (response.response === "email already exist") {
+        setAdminErrorAlert(true);
+      }
       if (response.affectedRows === 1) {
         setAdminAlert(true);
       }
@@ -343,7 +347,7 @@ const ManageAdmin = () => {
 
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "manageAdmin" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -440,7 +444,6 @@ const ManageAdmin = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body Admin_table"}
-                      subHeader
                     />
                   </div>
                 </div>

@@ -594,7 +594,7 @@ const AddDriver = () => {
       {loading === true ? <Loader /> : null}
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "Add driver" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -667,7 +667,6 @@ const AddDriver = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body product_table"}
-                      subHeader
                     />
                   </div>
                 </div>

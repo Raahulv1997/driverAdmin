@@ -482,7 +482,7 @@ export const AssignVehicleFunction = async (id, driverVal) => {
       vehicle_id: id,
       driver_id: driverVal,
     },
-    { headers: { admin_token: `${admin_token}` } }
+    { headers: { admin_token: admin_token } }
   );
   return response.data;
 };

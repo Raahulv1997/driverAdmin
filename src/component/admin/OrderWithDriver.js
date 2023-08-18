@@ -84,7 +84,7 @@ const OrderWithDriver = () => {
           className={
             row.order_status === "ready_to_pickup"
               ? "badge bg-secondary"
-              : row.order_status === "Pickup"
+              : row.order_status === "Pickuped"
               ? "badge bg-warning"
               : row.order_status === "Rejected_by_customer"
               ? "badge bg-info"
@@ -97,8 +97,8 @@ const OrderWithDriver = () => {
         >
           {row.order_status === "ready_to_pickup"
             ? "Ready to pickup"
-            : row.order_status === "Pickup"
-            ? "Pickup"
+            : row.order_status === "Pickuped"
+            ? "Pickuped"
             : row.order_status === "Failed_Delivery_Attempts"
             ? "Failed Delivery Attempts"
             : row.order_status === "Delivered"
@@ -126,7 +126,7 @@ const OrderWithDriver = () => {
           <option value="Failed_Delivery_Attempts">
             Failed Delivery Attempts
           </option>
-          <option value="Pickup">Pickup </option>
+          <option value="Pickuped">Pickuped </option>
           <option value="Rejected_by_customer">Rejected by customer</option>
 
           <option value="ready_to_pickup">Ready to pickup</option>
@@ -223,7 +223,7 @@ const OrderWithDriver = () => {
       headerObj
     );
     setLoading(false);
-
+    setapicall(false);
     setorderTable(response);
   };
 
@@ -244,7 +244,7 @@ const OrderWithDriver = () => {
   //search submit reset button
   const OnReset = () => {
     setState({ date_from: "", date_to: "" });
-    OrderData();
+
     setapicall(true);
     setErrors({});
   };
@@ -261,7 +261,7 @@ const OrderWithDriver = () => {
 
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "order with driver" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -287,6 +287,7 @@ const OrderWithDriver = () => {
                             name="date_from"
                             onChange={onInputChange}
                             value={state.date_from}
+                            max={moment().format("YYYY-MM-DD")}
                           />
                         </Form.Group>
                         {errors.date_from
@@ -311,6 +312,7 @@ const OrderWithDriver = () => {
                             name="date_to"
                             onChange={onInputChange}
                             value={state.date_to}
+                            min={moment(state.date_from).format("YYYY-MM-DD")}
                           />
                         </Form.Group>
                         {errors.date_to
@@ -356,7 +358,6 @@ const OrderWithDriver = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body product_table"}
-                      subHeader
                     />
                   </div>
                 </div>

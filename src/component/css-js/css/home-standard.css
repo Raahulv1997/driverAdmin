@@ -34,6 +34,9 @@
   -ms-transition: all linear 0.3s;
   -o-transition: all linear 0.3s;
 }
+a:hover {
+  color: var(--primary) !important;
+}
 .header-top p a:hover {
   color: var(--white);
   background: var(--primary);
@@ -55,6 +58,10 @@
   display: inline-block;
   color: var(--white);
   background: var(--primary);
+}
+.Vehicle_table .joBJrd,
+.Vehicle_table .hYBvIp {
+  justify-content: start;
 }
 @media (max-width: 575px) {
   .header-top p a {
@@ -187,6 +194,7 @@
   color: var(--text);
   padding: 10px 10px;
   text-transform: capitalize;
+  text-decoration: none;
   position: relative;
   display: -webkit-box;
   display: -ms-flexbox;
@@ -203,7 +211,7 @@
   -ms-transition: all linear 0.3s;
   -o-transition: all linear 0.3s;
 }
-.banner-category-item a:hover {
+.banner-category-item.active a {
   border-radius: 5px;
   color: var(--primary);
   background: var(--chalk);

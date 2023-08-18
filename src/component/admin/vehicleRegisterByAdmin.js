@@ -602,7 +602,7 @@ const VehicleRegisterByAdmin = () => {
 
       <div className="row admin_row">
         <div className="col-lg-3 col-md-3 admin_sidebar">
-          <Sidebar />
+          <Sidebar style={{ message: "vehicleRegister" }} />
         </div>
         <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
           <div className="main_content_div">
@@ -612,10 +612,10 @@ const VehicleRegisterByAdmin = () => {
             >
               <div className="">
                 <div className="page_main_contant">
-                  <h4> Vehicle</h4>
-                  <div className=" mt-3 p-3">
-                    <div className="row pb-3">
-                      <div className="col-md-3 col-sm-6 aos_input mb-2">
+                  <h4>Vehicle</h4>
+                  <div className="mt-3 p-3">
+                    <div className="row pb-3 gourav">
+                      <div className="col-md-4 col-sm-6 aos_input mb-2">
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="text"
@@ -713,7 +713,7 @@ const VehicleRegisterByAdmin = () => {
                           </Button>
                         </div>
                       </div>
-                      <div className="col-md-2 col-sm-6 aos_input mb-2">
+                      <div className="col-md-3 col-sm-6 aos_input mb-2">
                         <Button
                           className="button btn-success  main_button w-100"
                           onClick={() => handleShow("add")}
@@ -730,7 +730,6 @@ const VehicleRegisterByAdmin = () => {
                       highlightOnHover
                       pointerOnHover
                       className={"table_body Vehicle_table"}
-                      subHeader
                     />
                   </div>
                 </div>
