@@ -73,6 +73,7 @@ const AddDriver = () => {
 
   const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
   // get all driver list with page refressh
+  let admin_token = localStorage.getItem("admin_token");
   useEffect(() => {
     getallDriver();
   }, [apicall]);
@@ -117,12 +118,12 @@ const AddDriver = () => {
     {
       name: "Name",
 
-      selector: (row) =>
-        (
-          <span>
-            {row.driver_name} &nbsp;{row.driver_last_name}
-          </span>
-        ) || <b>unavailable</b>,
+      selector: (row) => (
+        <span>
+          {row.driver_name || <b>unavailable</b>} &nbsp;
+          {row.driver_last_name || <b>unavailable</b>}
+        </span>
+      ),
       sortable: true,
       width: "150px",
       center: true,
@@ -134,8 +135,7 @@ const AddDriver = () => {
 
     {
       name: "Date of Birth",
-      selector: (row) =>
-        moment(row.date_of_birth).format("YYYY-MM-DD") || <b>unavailable</b>,
+      selector: (row) => moment(row.date_of_birth).format("YYYY-MM-DD"),
       sortable: true,
       width: "150px",
       center: true,
@@ -150,12 +150,12 @@ const AddDriver = () => {
       selector: (row) => (
         <span>
           <span title={row.current_address}>
-            <b>Address:- </b> {row.current_address} || <b>unavailable</b>
+            <b>Address:- </b> {row.current_address || <b>unavailable</b>}
           </span>
           <br />
           <span title={row.email}>
             {" "}
-            <b>Email:- </b> {row.email}
+            <b>Email:- </b> {row.email || <b>unavailable</b>}
           </span>
         </span>
       ),
@@ -172,10 +172,10 @@ const AddDriver = () => {
       selector: (row) => (
         <span>
           <span title={row.contect_no}>
-            <b>Contact :-</b> {row.contect_no}|| <b>unavailable</b>
+            <b>Contact :-</b> {row.contect_no || <b>unavailable</b>}
           </span>
           <br />
-          <span title={row.licence_no}>
+          <span title={row.licence_no || <b>unavailable</b>}>
             {" "}
             <b>licence :-</b> {row.licence_no}|| <b>unavailable</b>
           </span>
@@ -535,7 +535,7 @@ const AddDriver = () => {
   };
 
   //on Driver  update function--------------
-
+  let headerObj = { headers: { admin_token: admin_token } };
   const handleUpdateDriver = async (e) => {
     e.preventDefault();
     if (validate()) {
@@ -546,7 +546,8 @@ const AddDriver = () => {
         adharFile,
         adharfilename,
         licenceFile,
-        licencefilename
+        licencefilename,
+        headerObj
       );
 
       if (response.message === "updated user successfully") {
@@ -1220,10 +1221,7 @@ const AddDriver = () => {
                     type={"submit"}
                   >
                     {" "}
-                    Add
-                    {/* {modalshow === "add"
-                              ? "Add Vendor"
-                              : "Update Vendor"} */}
+                    {showmodel === "add" ? "Add Driver" : "Update Driver"}
                   </Button>
                 </div>
               </div>

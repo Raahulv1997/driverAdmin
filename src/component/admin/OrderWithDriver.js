@@ -224,7 +224,11 @@ const OrderWithDriver = () => {
     );
     setLoading(false);
     setapicall(false);
-    setorderTable(response);
+    var filtered = response.filter(function(el) {
+      return el.driver_id !== null;
+    });
+
+    setorderTable(filtered);
   };
 
   //search submit button
@@ -273,8 +277,9 @@ const OrderWithDriver = () => {
                 <div className="page_main_contant">
                   <h4>Order List with driver</h4>
                   <div className=" mt-3 p-3">
-                    <div className="row pb-3">
+                    <div className="row pb-3     align-items-center">
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
+                        <label style={{ color: "#555" }}>Start date:</label>
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="date"
@@ -300,6 +305,7 @@ const OrderWithDriver = () => {
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
+                        <label style={{ color: "#555" }}>End date:</label>
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="date"
@@ -323,7 +329,7 @@ const OrderWithDriver = () => {
                             })
                           : null}
                       </div>
-                      <div className="col-md-2 col-sm-6 aos_input mb-2">
+                      <div className="col-md-2 col-sm-6 aos_input mb-sm-0 mb-2">
                         <div>
                           <Button
                             type=""
@@ -336,7 +342,7 @@ const OrderWithDriver = () => {
                           </Button>
                         </div>
                       </div>
-                      <div className="col-md-2 col-sm-6 aos_input mb-2">
+                      <div className="col-md-2 col-sm-6 aos_input mb-sm-0 mb-2">
                         <div>
                           <Button
                             type="reset"

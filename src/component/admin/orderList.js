@@ -121,7 +121,7 @@ const OrderList = () => {
               row.delivery_verify_code
             )
           }
-          value={row.driver_id}
+          value={row.driver_id ? row.driver_id : 0}
           name="status_order"
           // value={row.status_order}
         >
@@ -154,7 +154,9 @@ const OrderList = () => {
     setLoading(true);
     const response = await chooseDriverforDelivery();
     setLoading(false);
+    console.log("rsss---" + JSON.stringify(response));
     setDriverList(response);
+
     setApicall(false);
     // setDriverListView(true);
   };

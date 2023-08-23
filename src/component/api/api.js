@@ -211,7 +211,8 @@ export const UpdateDriverByAdmin = async (
   adharfile,
   adharfilename,
   licencefile,
-  licencefilename
+  licencefilename,
+  headerObj
 ) => {
   const formData = new FormData();
   formData.append("driver_name", props.driver_name);
@@ -244,7 +245,7 @@ export const UpdateDriverByAdmin = async (
   const response = await axios.put(
     `${process.env.REACT_APP_BASEURL_0}/update_driver`,
     formData,
-    { headers: { admin_token: `${admin_token}` } }
+    headerObj
   );
   return response.data;
 };
@@ -329,9 +330,7 @@ export const AddVehicleByAdmin = async (
 export const getDriverList = async () => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/only_driver_list`,
-    {
-      is_active: 1,
-    }
+    { search: "", is_active: 1 }
   );
   return response.data;
 };
@@ -481,6 +480,7 @@ export const AssignVehicleFunction = async (id, driverVal) => {
     {
       vehicle_id: id,
       driver_id: driverVal,
+      is_active: "1",
     },
     { headers: { admin_token: admin_token } }
   );
