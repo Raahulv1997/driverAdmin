@@ -133,9 +133,32 @@ a:hover {
   opacity: 1;
   top: 188px;
 }
+.show_sidebar {
+  /* display: block; */
+  position: absolute;
+  right: 16px;
+  top: 10px;
+  display: none;
+  overflow: visible;
+}
+
+.show_sidebar svg {
+  width: 24px;
+  height: 24px;
+}
+.show_admin_sidebar {
+  left: 0 !important;
+}
 @media (max-width: 991px) {
   .navbar-part {
     display: none;
+  }
+  .show_sidebar {
+    display: block;
+  }
+
+  .page_main_contant {
+    padding: 20px !important;
   }
 }
 @media (min-width: 992px) and (max-width: 1199px) {
@@ -338,8 +361,19 @@ a:hover {
   border-radius: 5px;
 }
 @media (max-width: 991px) {
-  .banner-category {
+  /* .banner-category {
     display: none;
+  } */
+  .admin_sidebar {
+    position: absolute;
+    z-index: 99;
+    left: -100%;
+    transition: all linear 0.3s;
+    box-shadow: -15px 0px 25px 0px rgb(0 0 0 / 15%);
+    -webkit-transition: all linear 0.3s;
+    -moz-transition: all linear 0.3s;
+    -ms-transition: all linear 0.3s;
+    -o-transition: all linear 0.3s;
   }
 }
 @media (max-width: 575px) {

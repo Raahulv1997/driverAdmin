@@ -264,10 +264,10 @@ const OrderWithDriver = () => {
       {loading === true ? <Loader /> : null}
 
       <div className="row admin_row">
-        <div className="col-lg-3 col-md-3 admin_sidebar">
+        <div className="col-lg-3 col-md-6 col-sm-7 col-10">
           <Sidebar style={{ message: "order with driver" }} />
         </div>
-        <div className="col-lg-9 col-md-9 admin_content_bar mt-5">
+        <div className="col-lg-9  admin_content_bar mt-5">
           <div className="main_content_div">
             <div
               className="dashboard-main-container mt-df25 mt-lg-31"

@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
+import { AiOutlineMenu } from "react-icons/ai";
 const Sidebar = (props) => {
+  const [onSidebar, setOnSidebar] = useState(false);
+
   const admin_token = localStorage.getItem("admin_token");
   console.log("props--" + JSON.stringify(props.style));
   const navigate = useNavigate();
@@ -15,9 +17,26 @@ const Sidebar = (props) => {
       alert("not logout");
     }
   };
+
+  const OnSideBar = () => {
+    setOnSidebar(true);
+    if (onSidebar === true) {
+      setOnSidebar(false);
+    }
+  };
   return (
     <div>
-      <div className="banner-category">
+      <div className="show_sidebar" onClick={OnSideBar}>
+        <AiOutlineMenu />
+      </div>
+
+      <div
+        className={
+          onSidebar === true
+            ? "banner-category admin_sidebar show_admin_sidebar"
+            : "banner-category admin_sidebar"
+        }
+      >
         <ul className="banner-category-list vh-100 pt-4">
           <li
             className={
