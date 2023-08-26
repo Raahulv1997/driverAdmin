@@ -5,7 +5,7 @@ import moment from "moment";
 let admin_token = localStorage.getItem("admin_token");
 
 let driver_token = localStorage.getItem("driver_token");
-
+console.log("jjjj");
 export const allOrder = async (id) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
