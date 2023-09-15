@@ -121,6 +121,7 @@ const OrderWithDriver = () => {
           onChange={(e) => onStatusChange(e, row.order_id)}
           name="order_status"
           value={row.order_status}
+          disabled={row.order_status === "Delivered" ? true : false}
         >
           <option value="">Select status</option>
           <option value="Failed_Delivery_Attempts">
@@ -279,7 +280,9 @@ const OrderWithDriver = () => {
                   <div className=" mt-3 p-3">
                     <div className="row pb-3     align-items-center">
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
-                        <label style={{ color: "#555" }}>Start date:</label>
+                        <label style={{ color: "#555" }}>
+                          Start order date:
+                        </label>
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="date"
@@ -305,7 +308,7 @@ const OrderWithDriver = () => {
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
-                        <label style={{ color: "#555" }}>End date:</label>
+                        <label style={{ color: "#555" }}>End order date:</label>
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="date"
