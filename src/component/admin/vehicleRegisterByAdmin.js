@@ -7,6 +7,7 @@ import DataTable from "react-data-table-component";
 
 import { BsTrash } from "react-icons/bs";
 import { BiEdit } from "react-icons/bi";
+import { BsRepeat } from "react-icons/bs";
 
 import SweetAlert from "sweetalert-react";
 import "sweetalert/dist/sweetalert.css";
@@ -43,6 +44,7 @@ const VehicleRegisterByAdmin = () => {
     insurance: "",
     registration: "",
   };
+  const [ShowDeleteStatus, setShowDeletestatust] = useState("");
   const [vehicleAssignAlert, setvehicleAssignAlert] = useState(false);
   const [apicall, setapicall] = useState(false);
   const [pucCertificateFile, setPucCertificateFile] = useState("");
@@ -164,26 +166,33 @@ const VehicleRegisterByAdmin = () => {
       width: "140px",
 
       selector: (row) => (
-        <Form.Select
-          aria-label="Search by delivery"
-          size="sm"
-          className="w-100"
-          onChange={(e) => onStatusChange(row.vehicle_id, e)}
-          name="status_order"
-          value={row.driver_id}
-        >
-          <option value="">drivers</option>
-          {driverList.map((item) => {
-            return (
-              <>
-                <option value={item.driver_id}>
-                  {item.driver_name}&nbsp;
-                  {item.driver_last_name}
-                </option>
-              </>
-            );
-          })}
-        </Form.Select>
+        <>
+          {row.vehicle_add_by === "driver" ? (
+            <span className="badge bg-success mt-2">Added by Driver</span>
+          ) : row.vehicle_add_by === "admin" ? (
+            <Form.Select
+              aria-label="Search by delivery"
+              size="sm"
+              className="w-100"
+              disabled={row.is_active === 0 ? true : false}
+              onChange={(e) => onStatusChange(row.vehicle_id, e)}
+              name="status_order"
+              value={row.driver_id}
+            >
+              <option value={""}>All drivers</option>
+              {driverList.map((item) => {
+                return (
+                  <>
+                    <option value={item.driver_id}>
+                      {item.driver_name}&nbsp;
+                      {item.driver_last_name}
+                    </option>
+                  </>
+                );
+              })}
+            </Form.Select>
+          ) : null}
+        </>
       ),
     },
 
@@ -265,6 +274,22 @@ const VehicleRegisterByAdmin = () => {
       ),
     },
     {
+      name: "Status",
+      selector: (row) => (
+        <>
+          {" "}
+          {row.is_active === 1 ? (
+            <span className="badge bg-success">Active</span>
+          ) : row.is_active === 0 ? (
+            <span className="badge bg-danger">Deactive</span>
+          ) : null}
+        </>
+      ),
+      sortable: true,
+      width: "130px",
+      center: true,
+    },
+    {
       name: "Action",
       width: "110px",
       style: {
@@ -278,10 +303,19 @@ const VehicleRegisterByAdmin = () => {
             className=" p-0  mr-1  editiconn text-secondary"
             onClick={handleEditShow.bind(this, row.vehicle_id)}
           />
-          <BsTrash
-            className=" p-0 m-0 editiconn text-danger"
-            onClick={handleAlert.bind(this, row.vehicle_id)}
-          />
+          {row.is_active === 1 ? (
+            <BsTrash
+              className=" p-0 m-0 editiconn text-danger"
+              // onClick={handleAlert.bind(this, row.vehicle_id)}
+
+              onClick={() => handleAlert(row.vehicle_id, "deleted")}
+            />
+          ) : (
+            <BsRepeat
+              className=" p-0 m-0 editiconn text-success"
+              onClick={() => handleAlert(row.vehicle_id, "active")}
+            />
+          )}
         </div>
       ),
     },
@@ -585,19 +619,27 @@ const VehicleRegisterByAdmin = () => {
     // setDriverListView(false);
   };
   //delete Vehicle alert---
-  const handleAlert = (id) => {
+  const handleAlert = (id, status) => {
+    console.log("id:-", id, "status:-", status);
     setShowDeleteAlert(true);
+    setShowDeletestatust(status);
     setId(id);
   };
 
   // delete Vehicle fuction------------
+  // const deleteVehicleAlert = async () => {
+  //   await VehicleDeleteStatusChange(Id);
+
+  //   setShowDeleteAlert(false);
+  //   setapicall(true);
+  // };
+
   const deleteVehicleAlert = async () => {
-    await VehicleDeleteStatusChange(Id);
+    await VehicleDeleteStatusChange(Id, ShowDeleteStatus);
 
     setShowDeleteAlert(false);
     setapicall(true);
   };
-
   return (
     <div>
       {loading === true ? <Loader /> : null}
@@ -1168,10 +1210,23 @@ const VehicleRegisterByAdmin = () => {
         // onCancel={}
       />
 
-      <SweetAlert
+      {/* <SweetAlert
         show={ShowDeleteAlert}
         title="Vehicle Name"
         text="Are you Sure you want to delete"
+        onConfirm={deleteVehicleAlert}
+        showCancelButton={true}
+        onCancel={closeVehicleAlert}
+      /> */}
+
+      <SweetAlert
+        show={ShowDeleteAlert}
+        title="Vehicle Name"
+        text={
+          ShowDeleteStatus === "active"
+            ? "Are you Sure you want to restore"
+            : "Are you Sure you want to delete"
+        }
         onConfirm={deleteVehicleAlert}
         showCancelButton={true}
         onCancel={closeVehicleAlert}

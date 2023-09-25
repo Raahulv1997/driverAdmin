@@ -70,7 +70,7 @@ const AddDriver = () => {
   const [imagererrorMessage, setImageErrorMessage] = useState("");
   const [adharerrorMessage, setAdharErrorMessage] = useState("");
   const [licenceerrorMessage, setLicenceErrorMessage] = useState("");
-
+  const [DriverAddErrors, setDriverAddError] = useState(false);
   const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
   // get all driver list with page refressh
   let admin_token = localStorage.getItem("admin_token");
@@ -120,12 +120,20 @@ const AddDriver = () => {
 
       selector: (row) => (
         <span>
-          {row.driver_name || <b>unavailable</b>} &nbsp;
-          {row.driver_last_name || <b>unavailable</b>}
+          <span>
+            <b>Name :</b> {row.driver_name || <b>unavailable</b>} &nbsp;
+            {row.driver_last_name || <b>unavailable</b>}
+          </span>{" "}
+          <br />
+          <span>
+            <b> Vehicle:</b>
+            {row.company_name || <b>unavailable</b>}&nbsp;
+            {row.model || <b>unavailable</b>}
+          </span>
         </span>
       ),
       sortable: true,
-      width: "150px",
+      width: "200px",
       center: true,
       style: {
         paddingRight: "32px",
@@ -187,6 +195,20 @@ const AddDriver = () => {
       center: true,
     },
     {
+      name: "Vehicle Activity",
+      selector: (row) => (
+        <>
+          {" "}
+          {row.vehicle_is_active === 1 ? (
+            <span className="badge bg-success">Vehicle Active</span>
+          ) : null}
+        </>
+      ),
+      sortable: true,
+      width: "130px",
+      center: true,
+    },
+    {
       name: "Working Area",
       selector: (row) => (
         <span
@@ -201,54 +223,58 @@ const AddDriver = () => {
       center: true,
     },
 
-    {
-      name: "Status",
-      width: "130px",
-      selector: (row) => (
-        <span
-          className={
-            row.status === "pending"
-              ? "badge bg-secondary"
-              : row.status === "draft"
-              ? "badge bg-primary"
-              : row.status === "approved"
-              ? "badge bg-info"
-              : "badge bg-dark"
-          }
-        >
-          {row.status === "pending"
-            ? "pending"
-            : row.status === "draft"
-            ? "draft"
-            : row.status === "approved"
-            ? "approved"
-            : "return"}
-        </span>
-      ),
-      sortable: true,
-    },
-    {
-      name: "Change Status",
-      selector: (row) => (
-        <Form.Select
-          aria-label="Search by delivery"
-          size="sm"
-          className="w-100"
-          onChange={(e) => onStatusChange(e, row.driver_id)}
-          name="status"
-          value={row.status}
-        >
-          <option value="">Select status</option>
+    // {
+    //   name: "Status",
+    //   width: "130px",
+    //   selector: (row) => (
+    //     <span
+    //       className={
+    //         row.status === "pending"
+    //           ? "badge bg-secondary"
+    //           : row.status === "draft"
+    //           ? "badge bg-primary"
+    //           : row.status === "approved"
+    //           ? "badge bg-info"
+    //           : "badge bg-dark"
+    //       }
+    //     >
+    //       {row.status === "pending"
+    //         ? "pending"
+    //         : row.status === "draft"
+    //         ? "draft"
+    //         : row.status === "approved"
+    //         ? "approved"
+    //         : "return"}
+    //     </span>
+    //   ),
+    //   sortable: true,
+    // },
+    // {
+    //   name: "Change Status",
+    //   selector: (row) => (
+    //     <Form.Select
+    //       aria-label="Search by delivery"
+    //       size="sm"
+    //       className="w-100"
+    //       onChange={(e) => onStatusChange(e, row.driver_id)}
+    //       name="status"
+    //       style={{ display: "none" }}
+    //       value={row.status}
+    //     >
+    //       <option value="">Select status</option>
 
-          <option value="pending">Pending</option>
+    //       <option value="pending">Pending</option>
 
-          <option value="approved">Approved </option>
+    //       <option value="approved">Approved </option>
 
-          <option value="draft">Draft </option>
-        </Form.Select>
-      ),
-      sortable: true,
-    },
+    //       <option value="draft">Draft </option>
+    //     </Form.Select>
+    //   ),
+    //   sortable: true,
+    //   style: {
+    //     display: "none", // This will hide both the column header and content
+    //   },
+    // },
 
     {
       name: "Action",
@@ -496,9 +522,13 @@ const AddDriver = () => {
         licenceFile,
         licencefilename
       );
-
+      console.log("ddd--" + JSON.stringify(response));
       if (response.affectedRows === 1) {
         setProductAlert(true);
+      }
+
+      if (response.message === "account already exists") {
+        setDriverAddError("already");
       }
     }
   };
@@ -527,6 +557,7 @@ const AddDriver = () => {
     setAdharErrorMessage("");
     setLicenceErrorMessage("");
     setErrors({});
+    setDriverAddError(false);
   };
 
   //add working area model close
@@ -583,12 +614,12 @@ const AddDriver = () => {
   };
 
   //Driver status change function----
-  const onStatusChange = async (e, id) => {
-    await DriverUpdateStatus(id, e.target.value);
+  // const onStatusChange = async (e, id) => {
+  //   await DriverUpdateStatus(id, e.target.value);
 
-    setapicall(true);
-    getallDriver();
-  };
+  //   setapicall(true);
+  //   getallDriver();
+  // };
 
   return (
     <div>
@@ -1039,6 +1070,12 @@ const AddDriver = () => {
                         return <small className="text-danger">{error}</small>;
                       })
                     : null}
+
+                  {DriverAddErrors === "already" ? (
+                    <small className="text-danger">
+                      Driver Already Exists....
+                    </small>
+                  ) : null}
                 </Form.Group>
               </div>
 

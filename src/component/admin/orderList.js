@@ -24,7 +24,7 @@ const OrderList = () => {
   const [apicall, setApicall] = useState(false);
   const [driverList, setDriverList] = useState([]);
   const [loading, setLoading] = useState(false);
-
+  let admin_token = localStorage.getItem("admin_token");
   //search order id filter intial state.............
   const initialFormState = {
     order_id: "",
@@ -111,6 +111,11 @@ const OrderList = () => {
         <Form.Select
           aria-label="Search by delivery"
           size="sm"
+          disabled={
+            row.order_status === "Pickuped" || row.order_status === "Delivered"
+              ? true
+              : false
+          }
           className="w-100"
           onChange={(e) =>
             onStatusChange(
@@ -188,7 +193,7 @@ const OrderList = () => {
     OrderData();
     onGetDriverList();
   }, [apicall]);
-
+  let headerObj = { headers: { admin_token: admin_token } };
   //function for get all order list................
   const OrderData = async () => {
     setLoading(true);

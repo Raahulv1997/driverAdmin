@@ -5,7 +5,7 @@ const Sidebar = (props) => {
   const [onSidebar, setOnSidebar] = useState(false);
 
   const admin_token = localStorage.getItem("admin_token");
-  console.log("props--" + JSON.stringify(props.style));
+
   const navigate = useNavigate();
   const OnLogoutClick = () => {
     if (admin_token !== null) {

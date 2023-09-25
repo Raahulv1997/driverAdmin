@@ -4,7 +4,6 @@ import { Button } from "react-bootstrap";
 import Form from "react-bootstrap/Form";
 import DataTable from "react-data-table-component";
 
-import useValidation from "../common/useValidation";
 import { devliveryOrderStatus, getOrderWithDriver } from "../api/api";
 import Sidebar from "../common/sidebar";
 import moment from "moment";
@@ -13,13 +12,15 @@ const OrderWithDriver = () => {
   const [ordertable, setorderTable] = useState([]);
   const [apicall, setapicall] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [orderID, setOrderID] = useState("");
+  const [orderIDError, setOrderIDError] = useState(false);
+  const [startDate, setStartDate] = useState("");
+  const [startDateError, setStartDateError] = useState(false);
+  const [endDate, setEndDate] = useState("");
+  const [endDateError, setEndDateError] = useState(false);
 
   let admin_token = localStorage.getItem("admin_token");
   // date filter intialstate----------------
-  const initialFormState = {
-    date_from: "",
-    date_to: "",
-  };
 
   //order with driver data table column----
   const columns = [
@@ -130,7 +131,6 @@ const OrderWithDriver = () => {
           <option value="Pickuped">Pickuped </option>
           <option value="Rejected_by_customer">Rejected by customer</option>
 
-          <option value="ready_to_pickup">Ready to pickup</option>
           <option value="Delivered">Delivered</option>
         </Form.Select>
       ),
@@ -179,35 +179,6 @@ const OrderWithDriver = () => {
   ];
 
   // filter validation
-  const validators = {
-    date_from: [
-      (value) =>
-        value === null || value === ""
-          ? "Please Fill from date"
-          : // : /[^A-Za-z 0-9]/g.test(value)
-            // ? "Cannot use special character "
-            null,
-    ],
-    date_to: [
-      (value) =>
-        value === null || value === ""
-          ? "Please Fill to date"
-          : // : /[^A-Za-z 0-9]/g.test(value)
-            // ? "Cannot use special character "
-            null,
-    ],
-  };
-
-  //import custom validations
-  const {
-    state,
-    setState,
-    onInputChange,
-
-    errors,
-    setErrors,
-    validate,
-  } = useValidation(initialFormState, validators);
 
   //order  data useEffect.... get all order list
   useEffect(() => {
@@ -219,8 +190,9 @@ const OrderWithDriver = () => {
   const OrderData = async () => {
     setLoading(true);
     const response = await getOrderWithDriver(
-      state.date_from,
-      state.date_to,
+      orderID,
+      startDate,
+      endDate,
       headerObj
     );
     setLoading(false);
@@ -235,10 +207,15 @@ const OrderWithDriver = () => {
   //search submit button
 
   const submitHandler = async () => {
-    if (validate()) {
+    if (orderID === "" && startDate === "" && endDate === "") {
+      setOrderIDError("OrderID is blank");
+      setStartDateError("Start is blank");
+      setEndDateError("End is blank");
+    } else {
       const response = await getOrderWithDriver(
-        state.date_from,
-        state.date_to,
+        orderID,
+        startDate,
+        endDate,
         headerObj
       );
 
@@ -248,10 +225,14 @@ const OrderWithDriver = () => {
 
   //search submit reset button
   const OnReset = () => {
-    setState({ date_from: "", date_to: "" });
-
+    setOrderID("");
+    setStartDate("");
+    setEndDate("");
     setapicall(true);
-    setErrors({});
+    setOrderIDError("");
+    setStartDateError("");
+    setEndDateError("");
+    // setErrors({});
   };
 
   const onStatusChange = async (e, id) => {
@@ -280,6 +261,34 @@ const OrderWithDriver = () => {
                   <div className=" mt-3 p-3">
                     <div className="row pb-3     align-items-center">
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
+                        <label style={{ color: "#555" }}>Order No:</label>
+                        <Form.Group className="mb-3">
+                          <Form.Control
+                            type="text"
+                            className={
+                              orderIDError === "OrderID is blank"
+                                ? "form-control border border-danger"
+                                : "form-control"
+                            }
+                            placeholder="Search by order no."
+                            name="order_id"
+                            onChange={(e) => {
+                              setOrderID(e.target.value);
+                              setOrderIDError("");
+                              setStartDateError("");
+                              setEndDateError("");
+                            }}
+                            value={orderID}
+                          />
+                        </Form.Group>
+                        {orderIDError === "OrderID is blank" ? (
+                          <small className="text-danger">
+                            Order No. is required
+                          </small>
+                        ) : null}
+                      </div>
+
+                      <div className="col-md-3 col-sm-6 aos_input mb-2">
                         <label style={{ color: "#555" }}>
                           Start order date:
                         </label>
@@ -287,24 +296,28 @@ const OrderWithDriver = () => {
                           <Form.Control
                             type="date"
                             className={
-                              errors.date_from
+                              startDateError === "Start is blank"
                                 ? "form-control border border-danger"
                                 : "form-control"
                             }
                             placeholder="Search by order no."
                             name="date_from"
-                            onChange={onInputChange}
-                            value={state.date_from}
+                            onChange={(e) => {
+                              setStartDate(e.target.value);
+                              setOrderIDError("");
+                              setStartDateError("");
+                              setEndDateError("");
+                            }}
+                            value={startDate}
                             max={moment().format("YYYY-MM-DD")}
                           />
                         </Form.Group>
-                        {errors.date_from
-                          ? (errors.date_from || []).map((error) => {
-                              return (
-                                <small className="text-danger">{error}</small>
-                              );
-                            })
-                          : null}
+                        {startDateError === "Start is blank" ? (
+                          <small className="text-danger">
+                            {" "}
+                            Order Start Date is required{" "}
+                          </small>
+                        ) : null}
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
@@ -313,24 +326,27 @@ const OrderWithDriver = () => {
                           <Form.Control
                             type="date"
                             className={
-                              errors.date_to
+                              endDateError === "End is blank"
                                 ? "form-control border border-danger"
                                 : "form-control"
                             }
                             placeholder="Search by order no."
                             name="date_to"
-                            onChange={onInputChange}
-                            value={state.date_to}
-                            min={moment(state.date_from).format("YYYY-MM-DD")}
+                            onChange={(e) => {
+                              setEndDate(e.target.value);
+                              setOrderIDError("");
+                              setStartDateError("");
+                              setEndDateError("");
+                            }}
+                            value={endDate}
+                            min={moment(endDate).format("YYYY-MM-DD")}
                           />
                         </Form.Group>
-                        {errors.date_to
-                          ? (errors.date_to || []).map((error) => {
-                              return (
-                                <small className="text-danger">{error}</small>
-                              );
-                            })
-                          : null}
+                        {endDateError === "End is blank" ? (
+                          <small className="text-danger">
+                            Order End Date is required
+                          </small>
+                        ) : null}
                       </div>
                       <div className="col-md-2 col-sm-6 aos_input mb-sm-0 mb-2">
                         <div>

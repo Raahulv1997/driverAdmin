@@ -22,6 +22,7 @@ function useValidation(initialState, validators) {
   };
 
   const validate = () => {
+    console.log("validate funtion cll");
     let newErrors = {};
     //console.log(("VALIDATION CHECK" + JSON.stringify(state));
     Object.keys(state).forEach((key) => {

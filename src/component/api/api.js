@@ -5,7 +5,7 @@ import moment from "moment";
 let admin_token = localStorage.getItem("admin_token");
 
 let driver_token = localStorage.getItem("driver_token");
-console.log("jjjj");
+
 export const allOrder = async (id) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
@@ -368,13 +368,10 @@ export const orderAssignByAdmin = async (orderID, driverId) => {
   return response.data;
 };
 
-export const getOrderWithDriver = async (fromDate, toDate, obj) => {
+export const getOrderWithDriver = async (orderID, fromDate, toDate, obj) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
-    {
-      date_from: fromDate,
-      date_to: toDate,
-    },
+    { order_id: orderID, date_from: fromDate, date_to: toDate },
     obj
   );
   return response.data;
@@ -384,7 +381,7 @@ export const VehicleList = async () => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
     {
-      is_active: 1,
+      is_active: "",
     },
     { headers: { admin_token: admin_token } }
   );
@@ -465,12 +462,30 @@ export const UpdateVehicleByAdmin = async (
   return response.data;
 };
 
-export const VehicleDeleteStatusChange = async (id) => {
+// export const VehicleDeleteStatusChange = async (id) => {
+//   const response = await axios.put(
+//     `${process.env.REACT_APP_BASEURL_0}/change_vehicle_feild`,
+//     {
+//       vehicle_id: id,
+//       is_active: 0,
+//     },
+//     { headers: { admin_token: `${admin_token}` } }
+//   );
+//   return response.data;
+// };
+
+export const VehicleDeleteStatusChange = async (id, status) => {
+  let is_active = 0;
+
+  if (status === "active") {
+    is_active = 1;
+  }
   const response = await axios.put(
     `${process.env.REACT_APP_BASEURL_0}/change_vehicle_feild`,
     {
       vehicle_id: id,
-      is_active: 0,
+      is_active: is_active,
+      status: status,
     },
     { headers: { admin_token: `${admin_token}` } }
   );
