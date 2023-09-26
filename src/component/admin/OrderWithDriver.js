@@ -146,29 +146,45 @@ const OrderWithDriver = () => {
     },
     {
       name: "Order date",
-      selector: (row) =>
-        moment(row.order_date).format("YYYY-MM-DD") || <b>unavailable</b>,
+      selector: (row) => (
+        <>
+          <span>
+            <span>
+              <b>Order Date:</b>{" "}
+              {moment(row.order_date).format("YYYY-MM-DD") || (
+                <b>unavailable</b>
+              )}
+            </span>
+            <br />
+            <span>
+              <b>Order Assign Date:</b>{" "}
+              {moment(row.order_asign_date).format("YYYY-MM-DD") || (
+                <b>unavailable</b>
+              )}
+            </span>
+            <br />
+            <span>
+              <b>Order Create On:</b>{" "}
+              {moment(row.created_on).format("YYYY-MM-DD") || (
+                <b>unavailable</b>
+              )}
+            </span>
+            <br />
+            <span>
+              <b>Delivery date:</b>{" "}
+              {moment(row.delivery_date).format("YYYY-MM-DD") || (
+                <b>unavailable</b>
+              )}
+            </span>
+          </span>
+        </>
+      ),
+
       sortable: true,
-      width: "140px",
+      width: "300px",
       center: true,
     },
 
-    {
-      name: "Delivery date",
-      selector: (row) =>
-        moment(row.delivery_date).format("YYYY-MM-DD") || <b>unavailable</b>,
-      sortable: true,
-      width: "140px",
-      center: true,
-    },
-    {
-      name: "Order Assign date",
-      selector: (row) =>
-        moment(row.order_asign_date).format("YYYY-MM-DD") || <b>unavailable</b>,
-      sortable: true,
-      width: "140px",
-      center: true,
-    },
     {
       name: "DriverContact",
       selector: (row) => row.contect_no || <b>unavailable</b>,
@@ -212,13 +228,14 @@ const OrderWithDriver = () => {
       setStartDateError("Start is blank");
       setEndDateError("End is blank");
     } else {
+      setLoading(true);
       const response = await getOrderWithDriver(
         orderID,
         startDate,
         endDate,
         headerObj
       );
-
+      setLoading(false);
       setorderTable(response);
     }
   };
@@ -290,7 +307,7 @@ const OrderWithDriver = () => {
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
                         <label style={{ color: "#555" }}>
-                          Start order date:
+                          Start order create Date:
                         </label>
                         <Form.Group className="mb-3">
                           <Form.Control
@@ -315,13 +332,15 @@ const OrderWithDriver = () => {
                         {startDateError === "Start is blank" ? (
                           <small className="text-danger">
                             {" "}
-                            Order Start Date is required{" "}
+                            Start order create Date required{" "}
                           </small>
                         ) : null}
                       </div>
 
                       <div className="col-md-3 col-sm-6 aos_input mb-2">
-                        <label style={{ color: "#555" }}>End order date:</label>
+                        <label style={{ color: "#555" }}>
+                          End order create Date:
+                        </label>
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="date"
@@ -344,7 +363,7 @@ const OrderWithDriver = () => {
                         </Form.Group>
                         {endDateError === "End is blank" ? (
                           <small className="text-danger">
-                            Order End Date is required
+                            End order create Date is required
                           </small>
                         ) : null}
                       </div>
