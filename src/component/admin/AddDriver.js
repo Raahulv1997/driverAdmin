@@ -185,13 +185,13 @@ const AddDriver = () => {
           <br />
           <span title={row.licence_no || <b>unavailable</b>}>
             {" "}
-            <b>licence :-</b> {row.licence_no}|| <b>unavailable</b>
+            <b>licence :-</b> {row.licence_no || <b>unavailable</b>}
           </span>
           <br />
         </span>
       ),
       sortable: true,
-      width: "160px",
+      width: "200px",
       center: true,
     },
     {
