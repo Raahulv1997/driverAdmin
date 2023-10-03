@@ -19,7 +19,6 @@ import OrderWithDriver from "./component/admin/OrderWithDriver";
 import DriverWorkingArea from "./component/admin/DriverWorkingArea";
 import ManageAdmin from "./component/admin/ManageAdmin";
 
-import AdminForgetPassword from "./component/admin/adminLoginSystem/AdminForgetPassword";
 import AuthWrapper from "./Authwrapper";
 
 function Layout1() {
@@ -28,7 +27,6 @@ function Layout1() {
       <Routes>
         <Route path="/" element={<AdminLogin />} />
 
-        <Route path="/Adminforgetpassword" element={<AdminForgetPassword />} />
         <Route path="/DriverSignup" element={<DriverSignUp />} />
         <Route path="/DriverRegister" element={<DriverRegister />} />
         <Route path="/DriverLogin" element={<DriverLogin />} />

@@ -115,17 +115,17 @@ export const DriverLoginFuntion = async (email, password) => {
 };
 
 export const getForgetOtpDriver = async (email) => {
-  const response = await axios.post(
-    `${process.env.REACT_APP_BASEURL_0}/driver_forgate_password`,
+  const response = await axios.put(
+    `${process.env.REACT_APP_BASEURL_0}/delivery_admin_forget_password`,
     {
-      email: email,
+      admin_email: email,
     }
   );
   return response.data;
 };
 
 export const ForgetpasswordDriverUpdate = async (password) => {
-  const response = await axios.put(
+  const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/driver_forgate_password_update`,
     {
       password: password,

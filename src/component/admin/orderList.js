@@ -75,7 +75,57 @@ const OrderList = () => {
     },
     {
       name: "Order status",
-      selector: (row) => row.order_status || <b>unavailable</b>,
+      selector: (row) => (
+        <span
+          className={
+            row.order_status === "approved"
+              ? "badge bg-primary"
+              : row.order_status === "pending"
+              ? "badge bg-secondary"
+              : row.order_status === "accepted_by_vendor"
+              ? "badge bg-primary"
+              : row.order_status === "Pickuped"
+              ? "badge bg-warning"
+              : row.order_status === "ready_to_packing"
+              ? "badge bg-primary"
+              : row.order_status === "Delivered"
+              ? "badge bg-success"
+              : row.order_status === "rejected_by_vendor"
+              ? "badge bg-danger"
+              : row.order_status === "Failed_Delivery_Attempts"
+              ? "badge bg-dark"
+              : row.order_status === "cancel"
+              ? "badge bg-dark"
+              : row.order_status === "Rejected_by_customer"
+              ? "badge bg-info"
+              : "badge bg-dark"
+          }
+        >
+          {row.order_status === "placed"
+            ? "placed"
+            : row.order_status === "accepted_by_vendor"
+            ? "Accepted by vendor"
+            : row.order_status === "Pickuped"
+            ? "Pickuped"
+            : row.order_status === "ready_to_packing"
+            ? "Ready to Packing"
+            : row.order_status === "Delivered"
+            ? "Delivered"
+            : row.order_status === "rejected_by_vendor"
+            ? "Rejected by vendor"
+            : row.order_status === "Failed_Delivery_Attempts"
+            ? "Failed Delivery Attempts"
+            : row.order_status === "cancel"
+            ? "Cancel"
+            : row.order_status === "Rejected_by_customer"
+            ? "Rejected by customer"
+            : row.order_status === "pending"
+            ? "pending"
+            : row.order_status === "approved"
+            ? "Accepted by Admin"
+            : row.order_status}
+        </span>
+      ),
       sortable: true,
       width: "140px",
       center: true,

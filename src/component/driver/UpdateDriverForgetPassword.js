@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
-import Logo from "../css-js/images/logo.png";
+import Logo from "../css-js/images/logo1.avif";
 import Modal from "react-bootstrap/Modal";
 import { Button } from "react-bootstrap";
 import Spinner from "react-bootstrap/Spinner";
@@ -44,7 +44,7 @@ const UpdateDriverForgetPassword = () => {
               </div>
               <div className="user-form-card">
                 <div className="user-form-title">
-                  <h2> Saller any issue?</h2>
+                  <h2> Driver any issue?</h2>
                   <p>Make sure your current password is strong</p>
                 </div>
                 <form
@@ -89,7 +89,7 @@ const UpdateDriverForgetPassword = () => {
               </div>
               <div className="user-form-remind">
                 <p>
-                  Go Back To<Link to="/sellerlogin">login here</Link>
+                  Go Back To<Link to="/">login here</Link>
                 </p>
               </div>
               <div className="user-form-footer">

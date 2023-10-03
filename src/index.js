@@ -20,6 +20,7 @@ import "../src/component/css-js/css/wallet.css";
 import "../src/component/css-js/css/invoice.css";
 import "../src/component/css-js/css/checkout.css";
 import { BrowserRouter } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 // <link rel="stylesheet" to=""  />
 
@@ -37,7 +38,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <App />
+      <GoogleOAuthProvider clientId="169629457915-89mo2c0jcr5f178n1n46e09ih0f36mlh.apps.googleusercontent.com">
+        <App />
+      </GoogleOAuthProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

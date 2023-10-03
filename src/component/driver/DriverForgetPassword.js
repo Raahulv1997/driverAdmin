@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import Logo from "../css-js/images/logo.png";
+import Logo from "../css-js/images/logo1.avif";
 import Spinner from "react-bootstrap/Spinner";
 import { getForgetOtpDriver } from "../api/api";
 const DriverForgetPassword = () => {
@@ -16,19 +16,29 @@ const DriverForgetPassword = () => {
 
   const getotp = async (e) => {
     e.preventDefault();
-    setSpinner("spinner");
-    const response = await getForgetOtpDriver(emailVal);
-    console.log("res--" + JSON.stringify(response));
-    if (
-      response.response ===
-      "email already exist, check your mail or try after sometime"
-    ) {
-      setEmailError("please try again");
-      setSpinner(false);
-    }
-    if (response.response === "send otp on your mail") {
-      setSpinner(false);
-      navigate(`/Driverotpverify?email=${emailVal}`);
+
+    if (emailVal === "") {
+      setEmailError("blank");
+    } else {
+      setSpinner("spinner");
+      const response = await getForgetOtpDriver(emailVal);
+      console.log("res--" + JSON.stringify(response));
+
+      if (response.message === "Sent your old password on Gmail Succesfully") {
+        setEmailError("sendPassword");
+        setSpinner(false);
+      }
+      if (
+        response.response ===
+        "email already exist, check your mail or try after sometime"
+      ) {
+        setEmailError("please try again");
+        setSpinner(false);
+      }
+      if (response.response === "send otp on your mail") {
+        setSpinner(false);
+        navigate(`/Driverotpverify?email=${emailVal}`);
+      }
     }
   };
   return (
@@ -51,18 +61,23 @@ const DriverForgetPassword = () => {
                   <div className="form-group">
                     <input
                       type="email"
-                      required
                       className="form-control"
                       placeholder="Enter your Email"
-                      onChange={(e) => {
-                        onEmailChange(e);
-                      }}
+                      onChange={onEmailChange}
                       //   value={old_password}
                     />
+                    {emailError === "blank" ? (
+                      <span className="text-danger">Email is Required.!!.</span>
+                    ) : null}
+                    {emailError === "sendPassword" ? (
+                      <span className="text-danger" type="invalid">
+                        Sent your old password on Gmail Succesfully.
+                      </span>
+                    ) : null}
                     {emailError === "please try again" ? (
-                      <small className="mt-1 ms-2 text-danger" type="invalid">
-                        Otp send failed please try again later,,,
-                      </small>
+                      <span className="text-danger" type="invalid">
+                        Otp send failed please try again later.
+                      </span>
                     ) : null}
                   </div>
 
@@ -71,18 +86,18 @@ const DriverForgetPassword = () => {
                       <button type="submit">
                         {" "}
                         <Spinner animation="border" role="status">
-                          <span className="visually-hidden"> Otp</span>
+                          <span className="visually-hidden"> Get Password</span>
                         </Spinner>
                       </button>
                     ) : (
-                      <button type="submit"> Otp</button>
+                      <button type="submit"> Get Password</button>
                     )}
                   </div>
                 </form>
               </div>
               <div className="user-form-remind">
                 <p>
-                  Go Back To<Link to="/DriverLogin">login here</Link>
+                  Go Back To<Link to="/">login here</Link>
                 </p>
               </div>
               {/* <div className="user-form-footer">
