@@ -166,21 +166,21 @@ const AdminLogin = () => {
                         />
                       ) : null}
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="#" className="twitter">
                         <i className="fab fa-twitter"></i>login with twitter
                       </Link>
-                    </li>
+                    </li> */}
                     <li>
                       <Link to="#" className="google" onClick={GoogleLogin}>
                         <i className="fab fa-google"></i>login with google
                       </Link>
                     </li>
-                    <li>
+                    {/* <li>
                       <Link to="#" className="instagram">
                         <i className="fab fa-instagram"></i>login with instagram
                       </Link>
-                    </li>
+                    </li> */}
                   </ul>
                   <div className="user-form-divider">
                     <p>or</p>
