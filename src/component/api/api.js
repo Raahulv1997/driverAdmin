@@ -6,7 +6,7 @@ let admin_token = localStorage.getItem("admin_token");
 
 let driver_token = localStorage.getItem("driver_token");
 
-export const allOrder = async (id) => {
+export const allOrder = async (id, headerObj) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/get_delivery_detaile_list`,
     {
@@ -14,7 +14,7 @@ export const allOrder = async (id) => {
       date_from: "",
       date_to: "",
     },
-    { headers: { admin_token: `${admin_token}` } }
+    headerObj
   );
   return response.data;
 };
@@ -377,13 +377,13 @@ export const getOrderWithDriver = async (orderID, fromDate, toDate, obj) => {
   return response.data;
 };
 
-export const VehicleList = async () => {
+export const VehicleList = async (headerObj) => {
   const response = await axios.post(
     `${process.env.REACT_APP_BASEURL_0}/vehicle_list`,
     {
       is_active: "",
     },
-    { headers: { admin_token: admin_token } }
+    headerObj
   );
   return response.data;
 };

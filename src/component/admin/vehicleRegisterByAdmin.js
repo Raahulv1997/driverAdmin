@@ -66,7 +66,7 @@ const VehicleRegisterByAdmin = () => {
   const [pucErrorMessage, setPucErrorMessage] = useState("");
   const [insurenceerrorMessage, setInsurenceErrorMessage] = useState("");
   const [registrationErrorMessage, setRegistrationErrorMessage] = useState("");
-
+  let admin_token = localStorage.getItem("admin_token");
   const allowedFormats = ["image/jpeg", "image/jpg", "image/png"];
 
   // search state data---------
@@ -507,11 +507,12 @@ const VehicleRegisterByAdmin = () => {
     getAllVehicleList();
     getOnlydriverList();
   }, [apicall]);
+  let headerObj = { headers: { admin_token: admin_token } };
 
   // get all vehicle list funtion-------------
   const getAllVehicleList = async () => {
     setLoading(true);
-    const response = await VehicleList();
+    const response = await VehicleList(headerObj);
     setLoading(false);
     setapicall(false);
     setVehicleList(response);

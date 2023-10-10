@@ -17,7 +17,6 @@ import Sidebar from "../common/sidebar";
 import {
   AddDriverByAdmin,
   DriverDeleteStatusChange,
-  DriverUpdateStatus,
   getDriverFilter,
   getDriverList,
   getDriverListById,
@@ -643,7 +642,7 @@ const AddDriver = () => {
                         <Form.Group className="mb-3">
                           <Form.Control
                             type="text"
-                            placeholder="Search by name"
+                            placeholder="Search by First name"
                             name="search"
                             onChange={searchValueHandler}
                             value={driverName}
